@@ -39,18 +39,23 @@
                     <a th:href="@{/todos}" class="bi bi-arrow-left-circle-fill">Back</a>
                 </div>
                 <h6 class="mb-4">Edit Task</h6>
-                <form autocomplete="off" th:action="@{/todo/{id}(id=${tasks.id})}" method="post">
+
+               <div th:if="${tasks.completed} == false ">
+
+                <form autocomplete="off" th:action="@{/todo/{id}(id=${tasks.id})}" th:method="post">
                     <div class="mb-3">
+                        <label for="taskTitle" class="form-label fw-bold">Title</label>
                         <input th:value="${tasks.title}" required name="title"  class="form-control" id="taskTitle"
                                aria-describedby="taskTitleHelp"/>
 
                     </div>
                     <div class="mb-3">
-
+                        <label for="taskDescription" class="form-label fw-bold">Description</label>
                         <textarea class="form-control"  name="description"  th:text="${tasks.description}"
                                   id="taskDescription" style="height: 150px;"></textarea>
                     </div>
                     <div class="mb-3">
+                        <label for="taskTitle" class="form-label fw-bold">Priority</label>
                         <select class="form-select" name="priority" id="selectPriority"
                                 aria-label="Floating label select example">
                             <option th:value="LOW" th:selected="${tasks.priority == 'LOW'}">LOW</option>
@@ -59,34 +64,89 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="taskDueDate" class="form-label">Due Date</label>
+                        <label for="taskDueDate" class="form-label fw-bold">Due Date</label>
                         <input class="form-control" name="dueDate" type="date" th:value="${tasks.dueDate}"
                                th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"  id="taskDueDate"/>
                     </div>
                     <div class="mb-3">
 
-
                     </div>
                     <div class="d-flex justify-content-between">
+                        <button type="submit" name="_method" value="delete" class="btn btn-danger ml-4">Delete</button>
+
                         <button type="submit" name="_method" value="put" class="btn btn-primary">Save</button>
 
-                        <form th:action="@{/todo/{id}(id=${tasks.id})}" th:method="patch">
+                    </div>
+                </form>
 
-<!--                            <input type="hidden" name="_method" value="patch"/>-->
+                   <div class="d-flex justify-content-center pt-0">
+                       <form th:action="@{/todo/{id}(id=${tasks.id})}" method="post">
+                           <input type="hidden" name="_method" value="patch"/>
+                           <div class="mb-3">
+                               <label for="taskCompletion" class="fw-bold pt-0">Completed:</label>
+                               <input type="checkbox"
+                                      id="taskCompletion"
+                                      th:checked="${tasks.completed}"
+                                      onclick="this.form.submit()"
+                               />
+                           </div>
+                       </form>
+                   </div>
+                </div>
+
+                <div th:if="${tasks.completed} == true">
+
+                    <form autocomplete="off" th:action="@{/todo/{id}(id=${tasks.id})}" th:method="post">
+                        <div class="mb-3">
+                            <label for="taskTitle2" class="form-label fw-bold">Title</label>
+                            <input th:value="${tasks.title}" disabled required name="title"  class="form-control" id="taskTitle2"
+                                   aria-describedby="taskTitleHelp"/>
+
+                        </div>
+                        <div class="mb-3">
+                            <label for="taskDescription2" class="form-label fw-bold">Description</label>
+                        <textarea class="form-control" disabled  name="description"  th:text="${tasks.description}"
+                                  id="taskDescription2" style="height: 150px;"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="selectPriority2" class="form-label fw-bold">Priority</label>
+                            <select class="form-select" disabled name="priority" id="selectPriority2"
+                                    aria-label="Floating label select example">
+                                <option th:value="LOW" th:selected="${tasks.priority == 'LOW'}">LOW</option>
+                                <option th:value="MEDIUM" th:selected="${tasks.priority == 'MEDIUM'}">MEDIUM</option>
+                                <option th:value="HIGH" th:selected="${tasks.priority == 'HIGH'}">HIGH</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="taskDueDate2" class="form-label fw-bold">Due Date</label>
+                            <input class="form-control" disabled name="dueDate" type="date" th:value="${tasks.dueDate}"
+                                   th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"  id="taskDueDate2"/>
+                        </div>
+                        <div class="mb-3">
+
+
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" disabled name="_method" value="put" class="btn btn-primary">Save</button>
+                            <button type="submit" name="_method" value="delete" class="btn btn-danger ml-4">Delete</button>
+
+                        </div>
+                    </form>
+
+                    <div class="d-flex justify-content-center pt-0">
+                        <form th:action="@{/todo/{id}(id=${tasks.id})}" method="post">
+                            <input type="hidden" name="_method" value="patch"/>
                             <div class="mb-3">
-                                <label for="taskCompletion">Completed:</label>
+                                <label for="taskCompletion" class="fw-bold pt-0">Completed:</label>
                                 <input type="checkbox"
-                                       id="taskCompletion"
+                                       id="taskCompletion2"
                                        th:checked="${tasks.completed}"
                                        onclick="this.form.submit()"
                                 />
                             </div>
                         </form>
-
-                        <button type="submit" name="_method" value="delete" class="btn btn-danger ml-4">Delete</button>
-
                     </div>
-                </form>
+                </div>
 
 
             </div>
