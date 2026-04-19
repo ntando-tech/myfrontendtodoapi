@@ -22,7 +22,18 @@ public class PageController {
     public PageController(RestTemplate restTemplate){
         this.restTemplate = restTemplate;
    }
-    @GetMapping("/todos")
+
+    @GetMapping("/signin")
+    public String getSignin() {
+        return "signin";
+    }
+
+    @GetMapping("/signup")
+    public String GetCreateUser() {
+        return "/signup";
+    }
+
+   @GetMapping("/todos")
     public String getAllTasks(Model model) {
 
        // RestTemplate restTemplate = new RestTemplate();
