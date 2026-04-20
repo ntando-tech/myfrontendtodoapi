@@ -53,10 +53,19 @@
                 <div class="form-floating mb-4">
                     <input type="password" class="form-control" id="signupPassword" placeholder="Password">
                     <label for="signupPassword">Password</label>
+                    <p type="button" onclick="showPassword()"
+                            class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent">
+                        <i id="passwordEyeIcon" class="bi bi-eye-fill"></i>
+                    </p>
                 </div>
                 <div class="form-floating mb-4">
                     <input type="password" class="form-control"  id="signupConfirmPassword" placeholder="Password">
                     <label for="signupConfirmPassword">Confirm Password</label>
+                    <p type="button" onclick="showConfirmPassword()"
+                    class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent"
+                    >
+                        <i id="confirmPasswordEyeIcon" class="bi bi-eye-fill"></i>
+                    </p>
                 </div>
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <a href="">Forgot Password</a>
@@ -69,5 +78,8 @@
     </div>
 </div>
 <!-- Sign Up End -->
+
+<script src="/js/main.js"></script>
+
 </body>
 </html>
