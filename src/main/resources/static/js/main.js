@@ -48,3 +48,12 @@ function showSigninPassword(){
         icon.classList.add("bi-eye-fill");
     }
 }
+
+function searchTask() {
+let keyword = document.getElementById("searchInput").value;
+fetch("/todos/search?searchword="+encodeURIComponent(keyword))
+.then(res => res.text())
+.then(data => {
+document.getElementById("taskContainer").innerHTML = data;
+});
+}

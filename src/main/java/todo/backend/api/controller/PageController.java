@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import todo.backend.api.model.Task;
 import todo.backend.api.config.RestClientConfig;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,8 +38,6 @@ public class PageController {
    @GetMapping("/todos")
     public String getAllTasks(Model model) {
 
-       // RestTemplate restTemplate = new RestTemplate();
-
         Task[] tasksArray = restTemplate.getForObject(API_URL, Task[].class);
         List<Task> tasks = Arrays.asList(tasksArray);
 
@@ -46,14 +46,33 @@ public class PageController {
         return "todos";
     }
 
+    @GetMapping("/todos/search")
+    public String searchTodos(@RequestParam(value="searchword", required = false) String searchword, Model model) {
+        Task[] tasksArray = restTemplate.getForObject(API_URL, Task[].class);
+        List<Task> tasks = Arrays.asList(tasksArray);
+        List<Task> searchResults = new ArrayList<>();
+        if(searchword.isEmpty()){
+            searchResults = tasks;
+        }
+        else {
+            for(Task task: tasksArray) {
+                if(task.getTitle().toLowerCase().contains(searchword.toLowerCase()) || task.getDescription().toLowerCase().contains(searchword.toLowerCase()) ||
+                task.getPriority().toLowerCase().contains(searchword.toLowerCase()) || task.getDueDate().contains(searchword) || String.valueOf(task.getCreated()).contains(searchword)){
+                    searchResults.add(task);
+                }
+            }
+        }
+        model.addAttribute("searchword", searchword);
+        model.addAttribute("tasks", searchResults);
+        return "searchResult";
+
+    }
+
+
     @GetMapping("/todo/{id}")
     public String viewSingleTask(@PathVariable Long id, Model model) {
 
-       // RestTemplate restTemplate = new RestTemplate();
-
-        //Task[] taskArray = restTemplate.getForObject( API_URL+"/" + id, Task[].class);
         Task task = restTemplate.getForObject( API_URL+"/todo/{id}", Task.class,id);
-
         model.addAttribute("tasks", task);
 
         return "viewSingleTask";
