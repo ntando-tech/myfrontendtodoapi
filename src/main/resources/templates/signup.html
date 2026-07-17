@@ -41,38 +41,44 @@
                     </p>
                     <h3>Sign Up</h3>
                 </div>
-                <form autocomplete="off">
+                <form autocomplete="off" th:action="@{/signup}" th:method="post" class="was-validated" onsubmit="showLoader()">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="signupUsername" placeholder="Username">
+                    <input type="text" class="form-control" th:name="username" th:maxlength="20" id="signupUsername" placeholder="Username" required>
                     <label for="signupUsername">Username</label>
+                    <div class="invalid-feedback"></div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="signupEmailAddress" placeholder="Email Address">
+                    <input type="email" class="form-control" th:name="email" th:maxlength="35" id="signupEmailAddress" placeholder="Email Address" required>
                     <label for="signupEmailAddress">Email address</label>
+                    <div class="invalid-feedback"></div>
                 </div>
                 <div class="form-floating mb-4">
-                    <input type="password" class="form-control" id="signupPassword" placeholder="Password">
+                    <input type="password" class="form-control" th:maxlength="25" th:name="password" id="signupPassword" placeholder="Password" required>
                     <label for="signupPassword">Password</label>
                     <p type="button" onclick="showPassword()"
-                            class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent">
+                            class="btn position-absolute top-50 end-0 translate-middle-y me-4 border-0 bg-transparent">
                         <i id="passwordEyeIcon" class="bi bi-eye-fill"></i>
                     </p>
+                    <div class="invalid-feedback"></div>
                 </div>
                 <div class="form-floating mb-4">
-                    <input type="password" class="form-control"  id="signupConfirmPassword" placeholder="Password">
+                    <input type="password" class="form-control"  th:maxlength="25"  id="signupConfirmPassword" placeholder="Password" required>
                     <label for="signupConfirmPassword">Confirm Password</label>
                     <p type="button" onclick="showConfirmPassword()"
-                    class="btn position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent"
+                    class="btn position-absolute top-50 end-0 translate-middle-y  me-4 border-0 bg-transparent"
                     >
                         <i id="confirmPasswordEyeIcon" class="bi bi-eye-fill"></i>
                     </p>
+                    <div class="invalid-feedback"></div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <a href="">Forgot Password</a>
-                </div>
-                <button type="submit" class="btn btn-primary py-3 w-100 mb-4" >Sign Up</button>
+                    <p id="showPasswordMessage"  th:text="${showPasswordMessage}"></p>
+                <button type="submit" id="signupBtn" class="btn btn-primary py-3 w-100 mb-4" >Sign Up</button>
                 <p class="text-center mb-0">Already have an Account? <a th:href="@{/signin}">Sign In</a></p>
                 </form>
+                <div id="loaderOverlay">
+                    <div class="spinner"></div>
+                    <p>Creating Account...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -80,6 +86,5 @@
 <!-- Sign Up End -->
 
 <script src="/js/main.js"></script>
-
 </body>
 </html>

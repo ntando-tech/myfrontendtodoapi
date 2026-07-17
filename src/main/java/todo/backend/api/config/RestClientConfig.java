@@ -13,8 +13,6 @@ public class RestClientConfig {
     // Use Apache HttpClient 5 to enable PATCH support
     HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 
-
-
         return new RestTemplate(factory);
 }
 }
