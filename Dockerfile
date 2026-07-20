@@ -1,17 +1,33 @@
-FROM eclipse-temurin:21-alpine
+#FROM eclipse-temurin:21-alpine
+#
+##COPY . .
+##RUN mvn clean package -DskipTests
+#
+###create a nonroot user and group
+#RUN addgroup -S spring && adduser -S spring -G spring
+#
+###set the nonroot user as the default user
+#USER spring:spring
+#
+###set the working directory
+#WORKDIR /opt
+#
+#COPY target/*.jar api.jar
+#EXPOSE 8081
+#ENTRYPOINT ["java","-jar","api.jar"]
 
-#COPY . .
-#RUN mvn clean package -DskipTests
 
-##create a nonroot user and group
-RUN addgroup -S spring && adduser -S spring -G spring
+# Build stage
+FROM eclipse-temurin:21-jdk-alpine AS builder
 
-##set the nonroot user as the default user
-USER spring:spring
+WORKDIR /app
+COPY . .
+RUN ./mvnw package
 
-##set the working directory
-WORKDIR /opt
+# Run stage
+FROM eclipse-temurin:21-jdk-alpine AS runner
 
-COPY target/*.jar api.jar
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8081
-ENTRYPOINT ["java","-jar","api.jar"]
+CMD ["java", "-jar", "app.jar"]
