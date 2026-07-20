@@ -31,7 +31,7 @@ public class PageController {
 
     @GetMapping("/signup")
     public String GetCreateUser() {
-        return "/signup";
+        return "signup";
     }
 
 
