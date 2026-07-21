@@ -56,7 +56,8 @@ public class PageController {
                }
                else{
                    System.out.println("This is else statement");
-                   return "signin";
+                   model.addAttribute("showPasswordMessage", message);
+                   return "signup";
                }
 
         }catch(Exception e){
