@@ -56,7 +56,7 @@ public class PageController {
                }
                else{
                    System.out.println("This is else statement");
-                   return "Failed to add new user";
+                   return "signin";
                }
 
         }catch(Exception e){
