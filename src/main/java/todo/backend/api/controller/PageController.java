@@ -20,7 +20,7 @@ import java.util.*;
 
 public class PageController {
 
-    private final String API_URL = "http://localhost:8080/api/tasks";
+    private final String API_URL = "https://tasktrackerbackend-6mlh.onrender.com/api/tasks";
 
     private final RestTemplate restTemplate;
 
@@ -39,7 +39,7 @@ public class PageController {
     public String signup(@ModelAttribute Users users, Model model) {
         try {
             System.out.println("Before sending data to backend");
-                String message = String.valueOf(restTemplate.postForObject("http://localhost:8080/register", users, String.class));
+                String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/register", users, String.class));
             System.out.println("Starting if statements");
                if(message.equals("Username Already Exists")) {
                    model.addAttribute("showPasswordMessage", "Username already exists");
@@ -75,7 +75,7 @@ public class PageController {
     public String forgotPassword(@ModelAttribute Users users,Model model){
         try{
             model.addAttribute("forgotPasswordMessage","");
-            String message = String.valueOf(restTemplate.postForObject("http://localhost:8080/forgotpassword", users, String.class));
+            String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/forgotpassword", users, String.class));
 
             if(message.equals("Link to reset the password was sent.")) {
                 model.addAttribute("forgotPasswordMessage",message);
@@ -108,7 +108,7 @@ public class PageController {
         try{
 
 System.out.println("Reset token on the path "+resetPasswordToken);
-            String message = String.valueOf(restTemplate.postForObject("http://localhost:8080/resetpassword?resetPasswordToken="+resetPasswordToken, users, String.class));
+            String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/resetpassword?resetPasswordToken="+resetPasswordToken, users, String.class));
 
             if(message.equals("Password was resetted")) {
                 model.addAttribute("resetPasswordMessage","");
@@ -166,7 +166,7 @@ System.out.println("Reset token on the path "+resetPasswordToken);
             model.addAttribute("signinError", "");
             RestTemplate restTemplate = new RestTemplate();
 
-            String url = "http://localhost:8080/login";
+            String url = "https://tasktrackerbackend-6mlh.onrender.com/login";
 
             Map<String, String> request = new HashMap<>();
 
