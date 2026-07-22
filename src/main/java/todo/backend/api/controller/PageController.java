@@ -69,7 +69,7 @@ public class PageController {
 
     @GetMapping("/forgotPassword")
     public String getforgotpage(){
-        return "forgotPassword";
+        return "forgotpassword";
     }
 
     @PostMapping("forgotPassword")
@@ -84,13 +84,13 @@ public class PageController {
             }
             else if(message.equals("User with this email was not found")){
                 model.addAttribute("forgotPasswordMessage",message);
-                return "forgotPassword";
+                return "forgotpassword";
             }else{
                 model.addAttribute("forgotPasswordMessage","Email was not found");
-                return "forgotPassword";
+                return "forgotpassword";
             }
         } catch (Exception e) {
-            return "forgotPassword";
+            return "forgotpassword";
         }
     }
 
