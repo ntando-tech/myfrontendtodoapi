@@ -69,7 +69,7 @@ public class PageController {
 
     @GetMapping("/forgotPassword")
     public String getforgotpage(){
-        return "forgotpassword";
+        return "forgotPassword";
     }
 
     @PostMapping("forgotPassword")
