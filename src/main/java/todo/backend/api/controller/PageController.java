@@ -85,11 +85,17 @@ public class PageController {
             else if(message.equals("User with this email was not found")){
                 model.addAttribute("forgotPasswordMessage",message);
                 return "forgotpassword";
-            }else{
+            }
+            else if(message.contains("Something went wrong while sending the reset password email")){
+                model.addAttribute("forgotPasswordMessage","Something went wrong while sending the reset password email");
+                return "forgotpassword";
+            }
+            else{
                 model.addAttribute("forgotPasswordMessage","Email was not found");
                 return "forgotpassword";
             }
         } catch (Exception e) {
+            model.addAttribute("forgotPasswordMessage","Exception Error");
             return "forgotpassword";
         }
     }
