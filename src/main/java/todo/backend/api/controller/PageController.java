@@ -222,6 +222,11 @@ System.out.println("Reset token on the path "+resetPasswordToken);
     }
 
 
+    @GetMapping("/")
+    public String openHomePage(){
+        return "redirect:/todos";
+    }
+
     @GetMapping("/todos")
     public String getTasks(
             HttpSession session,
