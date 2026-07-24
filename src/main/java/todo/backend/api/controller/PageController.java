@@ -104,9 +104,9 @@ public class PageController {
     public String getResetPage(@RequestParam("resetPasswordToken") String resetPasswordToken, Model model){
         try {
             model.addAttribute("resetPasswordToken", resetPasswordToken);
-            return "resetPassword";
+            return "resetpassword";
         }catch(Exception e){
-            return "resetPassword";
+            return "resetpassword";
         }
         }
 
@@ -124,32 +124,31 @@ System.out.println("Reset token on the path "+resetPasswordToken);
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", message);
-                return "resetPassword";
+                return "resetpassword";
             }
             else if(message.equals("Link to reset the password is expired")){
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", message);
-                return "resetPassword";
+                return "resetpassword";
             }
             else if(message.equals("Token for the user was not found")){
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", message);
-
-                return "resetPassword";
+                return "resetpassword";
             }else{
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", "Failed to reset the password");
-                return "resetPassword";
+                return "resetpassword";
             }
 
         }catch(Exception e){
             model.getAttribute("resetPasswordToken");
             model.addAttribute("resetPasswordToken", resetPasswordToken);
             model.addAttribute("resetPasswordMessage","Failed to reset the password");
-            return "resetPassword";
+            return "resetpassword";
         }
     }
 
