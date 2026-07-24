@@ -229,31 +229,37 @@ System.out.println("Reset token on the path "+resetPasswordToken);
     ) {
 
         try {
-            String token = session.getAttribute("token").toString();
 
-            //if(token.isEmpty() || token == null) {
-            if(token.isEmpty() || token.length() < 30){
-                model.addAttribute("signinError","Unauthorized");
-                return "redirect:/signin";
+            if(session.getAttribute("token") != null){
+
+                String token = session.getAttribute("token").toString();
+                if(token.length() > 30) {
+                    System.out.println("if statement");
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+
+                    HttpEntity<String> entity = new HttpEntity<>(headers);
+
+                    RestTemplate restTemplate = new RestTemplate();
+
+                    ResponseEntity<Task[]> response = restTemplate.exchange(
+                            API_URL + "/todos",
+                            HttpMethod.GET,
+                            entity,
+                            Task[].class
+                    );
+
+                    model.addAttribute("tasks", (response.getBody()));
+                    return "todos";
+                }
+                else{
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signin";
+                }
             }
             else{
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", "Bearer " + token);
-
-                HttpEntity<String> entity = new HttpEntity<>(headers);
-
-                RestTemplate restTemplate = new RestTemplate();
-
-                ResponseEntity<Task[]> response = restTemplate.exchange(
-                        API_URL+"/todos",
-                        HttpMethod.GET,
-                        entity,
-                        Task[].class
-                );
-
-                model.addAttribute("tasks",(response.getBody()));
-
-                return "todos";
+                model.addAttribute("signinError","Unauthorized");
+                return "signin";
             }
         }
          catch (Exception e) {
@@ -292,41 +298,48 @@ System.out.println("Reset token on the path "+resetPasswordToken);
                               Model model) {
 
         try {
-            String token = (String) session.getAttribute("token");
 
-            if(token.isEmpty() || token == null) {
-                return "redirect:/signin";
-            }
-            else{
+            if(session.getAttribute("token") != null) {
+                String token = (String) session.getAttribute("token");
 
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", "Bearer " + token);
+                if (token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
 
-                headers.setContentType(MediaType.APPLICATION_JSON);
+                    headers.setContentType(MediaType.APPLICATION_JSON);
 
-                HttpEntity<Task> entity = new HttpEntity<>(headers);
-                ResponseEntity<Task[]> response = restTemplate.exchange(
-                        API_URL+"/todos",
-                        HttpMethod.GET,
-                        entity,
-                        Task[].class
-                );
-                List<Task> tasks = Arrays.asList(response.getBody());
-                List<Task> searchResults = new ArrayList<>();
+                    HttpEntity<Task> entity = new HttpEntity<>(headers);
+                    ResponseEntity<Task[]> response = restTemplate.exchange(
+                            API_URL + "/todos",
+                            HttpMethod.GET,
+                            entity,
+                            Task[].class
+                    );
+                    List<Task> tasks = Arrays.asList(response.getBody());
+                    List<Task> searchResults = new ArrayList<>();
 
-                if (searchword.isEmpty()) {
-                    searchResults = tasks;
-                } else {
-                    for (Task task : tasks) {
-                        if (task.getTitle().toLowerCase().contains(searchword.toLowerCase()) || task.getDescription().toLowerCase().contains(searchword.toLowerCase()) ||
-                                task.getPriority().toLowerCase().contains(searchword.toLowerCase()) || task.getDueDate().contains(searchword) || String.valueOf(task.getCreated()).contains(searchword)) {
-                            searchResults.add(task);
+                    if (searchword.isEmpty()) {
+                        searchResults = tasks;
+                    } else {
+                        for (Task task : tasks) {
+                            if (task.getTitle().toLowerCase().contains(searchword.toLowerCase()) || task.getDescription().toLowerCase().contains(searchword.toLowerCase()) ||
+                                    task.getPriority().toLowerCase().contains(searchword.toLowerCase()) || task.getDueDate().contains(searchword) || String.valueOf(task.getCreated()).contains(searchword)) {
+                                searchResults.add(task);
+                            }
                         }
                     }
+                    model.addAttribute("searchword", searchword);
+                    model.addAttribute("tasks", searchResults);
+                    return "searchResult";
                 }
-                model.addAttribute("searchword", searchword);
-                model.addAttribute("tasks", searchResults);
-                return "searchResult";
+                else{
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signin";
+                }
+            }
+            else{
+                model.addAttribute("signinError","Unauthorized");
+                return "signin";
             }
         }
         catch(Exception e){
@@ -344,29 +357,36 @@ System.out.println("Reset token on the path "+resetPasswordToken);
 
         try {
 
-            String token = (String) session.getAttribute("token");
+            if(session.getAttribute("token") != null){
 
-            if(token.isEmpty() || token == null) {
-                return "redirect:/signin";
+                String token = (String) session.getAttribute("token");
+                if(token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+
+                    headers.set("Authorization", "Bearer " + token);
+
+                    HttpEntity<String> entity = new HttpEntity<>(headers);
+                    ResponseEntity<Task> response = restTemplate.exchange(
+                            API_URL + "/todo/{id}",
+                            HttpMethod.GET,
+                            entity,
+                            Task.class,
+                            id
+                    );
+
+                    Task task = response.getBody();
+                    model.addAttribute("tasks", task);
+
+                    return "viewSingleTask";
+                }
+                else{
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signin";
+                }
             }
             else{
-                HttpHeaders headers = new HttpHeaders();
-
-                headers.set("Authorization", "Bearer " + token);
-
-                HttpEntity<String> entity = new HttpEntity<>(headers);
-                ResponseEntity<Task> response = restTemplate.exchange(
-                        API_URL + "/todo/{id}",
-                        HttpMethod.GET,
-                        entity,
-                        Task.class,
-                        id
-                );
-                Task task = response.getBody();
-
-                model.addAttribute("tasks", task);
-
-                return "viewSingleTask";
+                model.addAttribute("signinError","Unauthorized");
+                return "signin";
             }
 
         }
@@ -377,17 +397,24 @@ System.out.println("Reset token on the path "+resetPasswordToken);
 
 
     @GetMapping("/todo")
-    public String getPage(HttpSession session){
+    public String getPage(HttpSession session, Model model){
         try {
-            String token = (String) session.getAttribute("token");
 
-            if(token.isEmpty() || token == null) {
-                return "redirect:/signin";
+            if(session.getAttribute("token") != null){
+                String token = (String) session.getAttribute("token");
+
+                if(token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+                    return "todo";
+                }else{
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signin";
+                }
             }
             else{
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", "Bearer "+ token);
-                return "todo";
+                model.addAttribute("signinError","Unauthorized");
+                return "signin";
             }
         }
         catch (Exception e) {
@@ -397,30 +424,38 @@ System.out.println("Reset token on the path "+resetPasswordToken);
 
     @PostMapping("/todo/save/task")
     public String saveTask(@ModelAttribute Task task,
-                           HttpSession session) {
+                           HttpSession session,
+                           Model model) {
 
         try {
-            String token = session.getAttribute("token").toString();
 
-            if(token.isEmpty() || token == null) {
-                return "redirect:/signin";
+            if(session.getAttribute("token") != null){
+                String token = session.getAttribute("token").toString();
+
+                if(token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+
+                    HttpEntity<Task> entity = new HttpEntity<>(task, headers);
+                    restTemplate.exchange(
+                            API_URL + "/todo/save/task",
+                            HttpMethod.POST,
+                            entity,
+                            Task.class
+                    );
+
+                    return "redirect:/todos";
+                }
+                else{
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signin";
+                }
             }
             else{
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", "Bearer " + token);
-
-                headers.setContentType(MediaType.APPLICATION_JSON);
-
-                HttpEntity<Task> entity = new HttpEntity<>(task, headers);
-                restTemplate.exchange(
-                        API_URL + "/todo/save/task",
-                        HttpMethod.POST,
-                        entity,
-                        Task.class
-                );
-
-                return "redirect:/todos";
+                model.addAttribute("signinError","Unauthorized");
+                return "signin";
             }
 
         }
@@ -432,32 +467,37 @@ System.out.println("Reset token on the path "+resetPasswordToken);
     @PutMapping("/todo/{id}")
     public String updateTask(@PathVariable Long id,
                              @ModelAttribute Task task,
-                             HttpSession session){
+                             HttpSession session,
+                             Model model){
 
         try {
 
-            String token = (String) session.getAttribute("token");
+            if(session.getAttribute("token") != null){
+                String token = (String) session.getAttribute("token");
 
-            if(token.isEmpty() || token == null) {
-                return "redirect:/signin";
+                if(token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+
+                    HttpEntity<Task> entity = new HttpEntity<>(task, headers);
+                    restTemplate.exchange(API_URL + "/todo/{id}",
+                            HttpMethod.PUT,
+                            entity,
+                            Task.class,
+                            id);
+
+                    return "redirect:/todos";
+                }
+                else{
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signin";
+                }
             }
-
             else{
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", "Bearer " + token);
-
-                headers.setContentType(MediaType.APPLICATION_JSON);
-
-                HttpEntity<Task> entity = new HttpEntity<>(task, headers);
-                restTemplate.exchange(API_URL + "/todo/{id}",
-                        HttpMethod.PUT,
-                        entity,
-                        Task.class,
-                        id);
-
-                return "redirect:/todos";
-
+                model.addAttribute("signinError","Unauthorized");
+                return "signin";
             }
         }
         catch (Exception e) {
@@ -471,29 +511,36 @@ System.out.println("Reset token on the path "+resetPasswordToken);
               Model model){
 
         try {
-            String token = session.getAttribute("token").toString();
 
-            if(token.isEmpty() || token == null) {
-                return "redirect:/signin";
+            if(session.getAttribute("token") != null){
+                String token = session.getAttribute("token").toString();
+
+                if(token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+
+                    headers.set("Authorization", "Bearer " + token);
+
+                    HttpEntity<String> entity = new HttpEntity<>(headers);
+
+                    ResponseEntity<Task[]> response = restTemplate.exchange(
+                            API_URL + "/completed",
+                            HttpMethod.GET,
+                            entity,
+                            Task[].class
+                    );
+
+                    List<Task> completedTaskss = Arrays.asList(response.getBody());
+                    model.addAttribute("tasks", completedTaskss);
+                    return "CompletedTasks";
+                }
+                else{
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signin";
+                }
             }
             else{
-
-                HttpHeaders headers = new HttpHeaders();
-
-                headers.set("Authorization", "Bearer " + token);
-
-                HttpEntity<String> entity = new HttpEntity<>(headers);
-
-                ResponseEntity<Task[]> response = restTemplate.exchange(
-                        API_URL + "/completed",
-                        HttpMethod.GET,
-                        entity,
-                        Task[].class
-                );
-
-                List<Task> completedTaskss = Arrays.asList(response.getBody());
-                model.addAttribute("tasks", completedTaskss);
-                return "CompletedTasks";
+                model.addAttribute("signinError","Unauthorized");
+                return "signin";
             }
         }
         catch (Exception e) {
@@ -505,28 +552,37 @@ System.out.println("Reset token on the path "+resetPasswordToken);
     @PatchMapping("/todo/{id}")
     public String updateCompletion(@PathVariable Long id,
                                    @ModelAttribute Task task,
-                                   HttpSession session){
+                                   HttpSession session,
+                                   Model model){
 
         try {
-            String token = (String) session.getAttribute("token");
 
-            if(token.isEmpty() || token == null) {
-                return "redirect:/signin";
+            if(session.getAttribute("token") != null) {
+                String token = (String) session.getAttribute("token");
+
+                if (token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                    HttpEntity<Task> entity = new HttpEntity<>(task, headers);
+                    restTemplate.exchange(
+                            API_URL + "/todo/{id}",
+                            HttpMethod.PATCH,
+                            entity,
+                            Task.class,
+                            id);
+                    return "redirect:/todos";
+                }
+                else{
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signin";
+                }
             }
             else{
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + token);
-
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<Task> entity = new HttpEntity<>(task, headers);
-            restTemplate.exchange(
-                    API_URL + "/todo/{id}",
-                    HttpMethod.PATCH,
-                    entity,
-                    Task.class,
-                    id);
-            return "redirect:/todos";
-        }
+                model.addAttribute("signinError","Unauthorized");
+                return "signin";
+            }
         }
         catch (Exception e) {
             return "redirect:/todos";
@@ -536,31 +592,38 @@ System.out.println("Reset token on the path "+resetPasswordToken);
 
     @DeleteMapping("/todo/{id}")
     public String deleteTask(@PathVariable Long id,
-                             HttpSession session) {
+                             HttpSession session,
+                             Model model) {
 
         try {
-            String token = (String) session.getAttribute("token");
 
-            if(token.isEmpty() || token == null) {
-                return "redirect:/signin";
+            if(session.getAttribute("token") != null){
+                String token = (String) session.getAttribute("token");
+
+                if(token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+
+                    HttpEntity<Task> entity = new HttpEntity<>(headers);
+                    restTemplate.exchange(
+                            API_URL + "/todo/{id}",
+                            HttpMethod.DELETE,
+                            entity,
+                            Task.class,
+                            id
+                    );
+
+                    return "redirect:/todos";
+                }else{
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signin";
+                }
             }
             else{
-
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", "Bearer " + token);
-
-                headers.setContentType(MediaType.APPLICATION_JSON);
-
-                HttpEntity<Task> entity = new HttpEntity<>(headers);
-                restTemplate.exchange(
-                        API_URL + "/todo/{id}",
-                        HttpMethod.DELETE,
-                        entity,
-                        Task.class,
-                        id
-                );
-
-                return "redirect:/todos";
+                model.addAttribute("signinError","Unauthorized");
+                return "signin";
             }
 
         }
