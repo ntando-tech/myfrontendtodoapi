@@ -86,8 +86,12 @@ public class PageController {
                 model.addAttribute("forgotPasswordMessage",message);
                 return "forgotpassword";
             }
+            else if(message.equals("Link to reset the password hasn't expired,Check your emails")){
+                model.addAttribute("forgotPasswordMessage", message);
+                return "resetpassword";
+            }
             else if(message.contains("Something went wrong while sending the reset password email")){
-                model.addAttribute("forgotPasswordMessage","Something went wrong while sending the reset password email");
+                model.addAttribute("forgotPasswordMessage",message);
                 return "forgotpassword";
             }
             else{
@@ -137,7 +141,8 @@ System.out.println("Reset token on the path "+resetPasswordToken);
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", message);
                 return "resetpassword";
-            }else{
+            }
+            else{
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", "Failed to reset the password");
