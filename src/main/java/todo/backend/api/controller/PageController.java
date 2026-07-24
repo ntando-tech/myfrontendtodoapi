@@ -88,7 +88,7 @@ public class PageController {
             }
             else if(message.equals("Link to reset the password hasn't expired,Check your emails")){
                 model.addAttribute("forgotPasswordMessage", message);
-                return "resetpassword";
+                return "forgotpassword";
             }
             else if(message.contains("Something went wrong while sending the reset password email")){
                 model.addAttribute("forgotPasswordMessage",message);
