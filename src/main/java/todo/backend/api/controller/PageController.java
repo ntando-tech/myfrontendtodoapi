@@ -227,7 +227,7 @@ public class PageController {
             return "signin";
         }else if(message.equals("You entered unaccepted values")){
             System.out.println("Incorrect Credentials");
-            model.addAttribute("signinError",message);
+            model.addAttribute("signinError","Incorrect Credentials");
             return "signin";
         }
         else if(message.contains("Correct credentials now generating token for login ")){
