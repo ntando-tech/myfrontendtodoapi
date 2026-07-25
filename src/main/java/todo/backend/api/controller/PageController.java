@@ -118,7 +118,7 @@ public class PageController {
     public String resetPassword(@RequestParam(value = "resetPasswordToken") String resetPasswordToken, @ModelAttribute Users users, Model model){
         try{
 
-System.out.println("Reset token on the path "+resetPasswordToken);
+            System.out.println("Reset token on the path "+resetPasswordToken);
             String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/resetpassword?resetPasswordToken="+resetPasswordToken, users, String.class));
 
             if(message.equals("Password was resetted")) {
@@ -157,8 +157,32 @@ System.out.println("Reset token on the path "+resetPasswordToken);
         }
     }
 
-    @GetMapping("/emailverification")
-    public String getEmailVerification(){ return "emailverification";}
+    @GetMapping("/accountVerification")
+    public String getEmailVerification(@RequestParam("token") String token, Model model){
+        try {
+            System.out.println("My verification token: "+token);
+            String message = restTemplate.getForObject(API_URL + "/verify?token=" + token.trim(), String.class);
+
+            if(message.equals("The account is verified")) {
+                model.addAttribute("accountVerificationMessage", message);
+                return "accountverification";
+            } else if (message.equals("The token is expired, New link for verification was sent to your email.")) {
+                model.addAttribute("accountVerificationMessage", message);
+                return "accountverification";
+            } else if (message.equals("User with that token was not found")) {
+                model.addAttribute("accountVerificationMessage", message);
+                return "accountverification";
+            } else if (message.equals("Account already verified")) {
+                model.addAttribute("accountVerificationMessage", message);
+                return "accountverification";
+            } else {
+                model.addAttribute("accountVerificationMessage", "Failed to verify users account.");
+                return "accountverification";
+            }
+        }catch(Exception e){
+            return "Failed to verify users account.";
+        }
+    }
 
     @GetMapping("/signin")
     public String getSignin() {
