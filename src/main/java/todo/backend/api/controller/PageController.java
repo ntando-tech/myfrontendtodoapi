@@ -76,7 +76,9 @@ public class PageController {
     public String forgotPassword(@ModelAttribute Users users,Model model){
         try{
             model.addAttribute("forgotPasswordMessage","");
+
             String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/forgotpassword", users, String.class));
+            System.out.println("Message:"+ message);
 
             if(message.equals("Link to reset the password was sent.")) {
                 model.addAttribute("forgotPasswordMessage",message);
@@ -91,6 +93,10 @@ public class PageController {
                 return "forgotpassword";
             }
             else if(message.contains("Something went wrong while sending the reset password email")){
+                model.addAttribute("forgotPasswordMessage",message);
+                return "forgotpassword";
+            }
+            else if(message.contains("Failed to send reset link to forgot password controller")){
                 model.addAttribute("forgotPasswordMessage",message);
                 return "forgotpassword";
             }
