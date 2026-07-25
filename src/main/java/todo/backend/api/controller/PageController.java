@@ -161,8 +161,8 @@ public class PageController {
     public String getEmailVerification(@RequestParam("token") String token, Model model){
         try {
             System.out.println("My verification token: "+token);
-            String message = restTemplate.getForObject(API_URL + "/verify?token=" + token.trim(), String.class);
-
+            String message = restTemplate.getForObject("https://tasktrackerbackend-6mlh.onrender.com/verify?token=" + token.trim(), String.class);
+            System.out.println("My message:"+ message);
             if(message.equals("The account is verified")) {
                 model.addAttribute("accountVerificationMessage", message);
                 return "accountverification";
