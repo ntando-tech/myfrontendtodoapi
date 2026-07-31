@@ -667,6 +667,90 @@ public class PageController {
         }
     }
 
+    @GetMapping("/changePassword")
+    public String getChangePasswordPage(HttpSession session,
+                                        Model model){
+        try{
+            if(session.getAttribute("token") != null) {
+                String token = session.getAttribute("token").toString();
+                if(token.length() > 30) {
+                    return "changepassword";
+                }else {
+                    model.addAttribute("signinError","Unauthorized");
+                    return "signinError";
+                }
+            }
+            else{
+                model.addAttribute("signinError","Unauthorized");
+                return "signinError";
+            }
+        }catch(Exception e){
+            model.addAttribute("changepasswordError","Unauthorized");
+            return "changepassword";
+        }
+    }
+
+    @PatchMapping("/changePassword")
+    public String changePassword(@ModelAttribute Users users, HttpSession session, Model model){
+        try{
+            System.out.println("users: "+users);
+            System.out.println("Password: "+ users.getPassword());
+            System.out.println("Change Password Token: "+session.getAttribute("token"));
+            if(session.getAttribute("token") != null){
+                String token = session.getAttribute("token").toString();
+                System.out.println("Inside first If Token: "+session.getAttribute("token"));
+
+                if(token.length() > 30){
+                    System.out.println("Inside second If Token: "+session.getAttribute("token"));
+
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+                    System.out.println("My authorization header:"+headers.get("Authorization"));
+                    System.out.println("after setting token in the header Token: "+session.getAttribute("token"));
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                    System.out.println("After Application Json Token: "+session.getAttribute("token"));
+
+                    HttpEntity<Users> entity = new HttpEntity<>(users, headers);
+
+                    //RestTemplate restTemplate = new RestTemplate();
+                    System.out.println("Sending data to database");
+                    System.out.println("Entity Header:"+entity.getHeaders());
+                    System.out.println("Entity Body:"+ entity.getBody().getPassword());
+                    ResponseEntity<Users> response = restTemplate.exchange(
+                            "https://tasktrackerbackend-6mlh.onrender.com/changepassword",
+                            HttpMethod.PATCH,
+                            entity,
+                            Users.class
+                    );
+                    System.out.println("Message"+ response);
+                    System.out.println("Message Body"+ response.getBody());
+
+                    if(response.getBody() != null && response.getBody().equals("Password Changed")) {
+                        return "redirect:/todos";
+                    }else if(response.getBody() != null &&  response.getBody().equals("You entered wrong current password")){
+                        model.addAttribute("changePasswordError", "Unauthorized");
+                        return "changepassword";
+                    }else{
+                        model.addAttribute("changePasswordError", "Unauthorized");
+                        return "changepassword";
+                    }
+                }
+                else{
+                    model.addAttribute("signinError", "Unauthorized");
+                    return "redirect:/signin";
+                }
+            }else{
+                model.addAttribute("signinError", "Unauthorized");
+                return "redirect:/signin";
+            }
+        }catch(Exception e){
+            model.addAttribute("changePasswordError", e.getMessage());
+            System.out.println("Message:"+e.getMessage());
+            return "changepassword";
+        }
+    }
+
 
 
 }
