@@ -717,11 +717,11 @@ public class PageController {
                     System.out.println("Sending data to database");
                     System.out.println("Entity Header:"+entity.getHeaders());
                     System.out.println("Entity Body:"+ entity.getBody().getPassword());
-                    ResponseEntity<Users> response = restTemplate.exchange(
+                    ResponseEntity<String> response = restTemplate.exchange(
                             "https://tasktrackerbackend-6mlh.onrender.com/changepassword",
                             HttpMethod.PATCH,
                             entity,
-                            Users.class
+                            String.class
                     );
                     System.out.println("Message"+ response);
                     System.out.println("Message Body"+ response.getBody());
