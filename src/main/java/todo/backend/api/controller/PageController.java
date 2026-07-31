@@ -693,46 +693,37 @@ public class PageController {
     @PatchMapping("/changePassword")
     public String changePassword(@ModelAttribute Users users, HttpSession session, Model model){
         try{
-            System.out.println("users: "+users);
-            System.out.println("Password: "+ users.getPassword());
-            System.out.println("Change Password Token: "+session.getAttribute("token"));
+
             if(session.getAttribute("token") != null){
                 String token = session.getAttribute("token").toString();
-                System.out.println("Inside first If Token: "+session.getAttribute("token"));
 
                 if(token.length() > 30){
-                    System.out.println("Inside second If Token: "+session.getAttribute("token"));
 
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
-                    System.out.println("My authorization header:"+headers.get("Authorization"));
-                    System.out.println("after setting token in the header Token: "+session.getAttribute("token"));
 
                     headers.setContentType(MediaType.APPLICATION_JSON);
-                    System.out.println("After Application Json Token: "+session.getAttribute("token"));
 
                     HttpEntity<Users> entity = new HttpEntity<>(users, headers);
 
                     //RestTemplate restTemplate = new RestTemplate();
-                    System.out.println("Sending data to database");
-                    System.out.println("Entity Header:"+entity.getHeaders());
-                    System.out.println("Entity Body:"+ entity.getBody().getPassword());
+
                     ResponseEntity<String> response = restTemplate.exchange(
                             "https://tasktrackerbackend-6mlh.onrender.com/changepassword",
                             HttpMethod.PATCH,
                             entity,
                             String.class
                     );
-                    System.out.println("Message"+ response);
-                    System.out.println("Message Body"+ response.getBody());
+
 
                     if(response.getBody() != null && response.getBody().equals("Password Changed")) {
-                        return "redirect:/todos";
+                        model.addAttribute("changePasswordError", "Password was successfully changed");
+                        return "changepassword";
                     }else if(response.getBody() != null &&  response.getBody().equals("You entered wrong current password")){
-                        model.addAttribute("changePasswordError", "Unauthorized");
+                        model.addAttribute("changePasswordError", response.getBody());
                         return "changepassword";
                     }else{
-                        model.addAttribute("changePasswordError", "Unauthorized");
+                        model.addAttribute("changePasswordError", response.getBody());
                         return "changepassword";
                     }
                 }
@@ -746,7 +737,6 @@ public class PageController {
             }
         }catch(Exception e){
             model.addAttribute("changePasswordError", e.getMessage());
-            System.out.println("Message:"+e.getMessage());
             return "changepassword";
         }
     }
