@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import todo.backend.api.model.Task;
 import todo.backend.api.model.Users;
 
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -25,9 +26,9 @@ public class PageController {
     private final RestTemplate restTemplate;
 
 
-    public PageController(RestTemplate restTemplate){
+    public PageController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-   }
+    }
 
     @GetMapping("/signup")
     public String GetCreateUser() {
@@ -39,137 +40,125 @@ public class PageController {
     public String signup(@ModelAttribute Users users, Model model) {
         try {
             System.out.println("Before sending data to backend");
-                String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/register", users, String.class));
+            String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/register", users, String.class));
             System.out.println("Starting if statements");
-               if(message.equals("Username Already Exists")) {
-                   model.addAttribute("showPasswordMessage", "Username already exists");
-               return "signup";
-               }
-               else if(message.equals("Email Already Exists"))
-               {
-                   model.addAttribute("showPasswordMessage", "Email already exists");
-                   return "signup";
-               }
-               else if(message.equals("User was added successfully")){
+            if (message.equals("Username Already Exists")) {
+                model.addAttribute("showPasswordMessage", "Username already exists");
+                return "signup";
+            } else if (message.equals("Email Already Exists")) {
+                model.addAttribute("showPasswordMessage", "Email already exists");
+                return "signup";
+            } else if (message.equals("User was added successfully")) {
 
-                   return "redirect:/signin";
-               }
-               else{
-                   System.out.println("This is else statement");
-                   model.addAttribute("showPasswordMessage", message);
-                   return "signup";
-               }
+                return "redirect:/signin";
+            } else {
+                System.out.println("This is else statement");
+                model.addAttribute("showPasswordMessage", message);
+                return "signup";
+            }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Exception error on front end ");
-            model.addAttribute("showPasswordMessage","Failed to create an account");
+            model.addAttribute("showPasswordMessage", "Failed to create an account");
             return "signup";
         }
     }
 
     @GetMapping("/forgotPassword")
-    public String getforgotpage(){
+    public String getforgotpage() {
         return "forgotpassword";
     }
 
     @PostMapping("forgotPassword")
-    public String forgotPassword(@ModelAttribute Users users,Model model){
-        try{
-            model.addAttribute("forgotPasswordMessage","");
+    public String forgotPassword(@ModelAttribute Users users, Model model) {
+        try {
+            model.addAttribute("forgotPasswordMessage", "");
 
             String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/forgotpassword", users, String.class));
-            System.out.println("Message:"+ message);
+            System.out.println("Message:" + message);
 
-            if(message.equals("Link to reset the password was sent.")) {
-                model.addAttribute("forgotPasswordMessage",message);
+            if (message.equals("Link to reset the password was sent.")) {
+                model.addAttribute("forgotPasswordMessage", message);
                 return "redirect:/signin";
-            }
-            else if(message.equals("User with this email was not found")){
-                model.addAttribute("forgotPasswordMessage",message);
-                return "forgotpassword";
-            }
-            else if(message.equals("Link to reset the password hasn't expired,Check your emails")){
+            } else if (message.equals("User with this email was not found")) {
                 model.addAttribute("forgotPasswordMessage", message);
                 return "forgotpassword";
-            }
-            else if(message.contains("Something went wrong while sending the reset password email")){
-                model.addAttribute("forgotPasswordMessage",message);
+            } else if (message.equals("Link to reset the password hasn't expired,Check your emails")) {
+                model.addAttribute("forgotPasswordMessage", message);
                 return "forgotpassword";
-            }
-            else if(message.contains("Failed to send reset link to forgot password controller")){
-                model.addAttribute("forgotPasswordMessage",message);
+            } else if (message.contains("Something went wrong while sending the reset password email")) {
+                model.addAttribute("forgotPasswordMessage", message);
                 return "forgotpassword";
-            }
-            else{
-                model.addAttribute("forgotPasswordMessage","Email was not found");
+            } else if (message.contains("Failed to send reset link to forgot password controller")) {
+                model.addAttribute("forgotPasswordMessage", message);
+                return "forgotpassword";
+            } else {
+                model.addAttribute("forgotPasswordMessage", "Email was not found");
                 return "forgotpassword";
             }
         } catch (Exception e) {
-            model.addAttribute("forgotPasswordMessage","Exception Error");
+            model.addAttribute("forgotPasswordMessage", "Exception Error");
             return "forgotpassword";
         }
     }
 
     @GetMapping("/resetPassword")
-    public String getResetPage(@RequestParam("resetPasswordToken") String resetPasswordToken, Model model){
+    public String getResetPage(@RequestParam("resetPasswordToken") String resetPasswordToken, Model model) {
         try {
             model.addAttribute("resetPasswordToken", resetPasswordToken);
             return "resetpassword";
-        }catch(Exception e){
+        } catch (Exception e) {
             return "resetpassword";
         }
-        }
+    }
 
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestParam(value = "resetPasswordToken") String resetPasswordToken, @ModelAttribute Users users, Model model){
-        try{
+    public String resetPassword(@RequestParam(value = "resetPasswordToken") String resetPasswordToken, @ModelAttribute Users users, Model model) {
+        try {
 
-            System.out.println("Reset token on the path "+resetPasswordToken);
-            String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/resetpassword?resetPasswordToken="+resetPasswordToken, users, String.class));
+            System.out.println("Reset token on the path " + resetPasswordToken);
+            String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/resetpassword?resetPasswordToken=" + resetPasswordToken, users, String.class));
 
-            if(message.equals("Password was resetted")) {
-                model.addAttribute("resetPasswordMessage","");
+            if (message.equals("Password was resetted")) {
+                model.addAttribute("resetPasswordMessage", "");
                 return "redirect:/signin";
-            }else if(message.equals("Use legitimate link to reset the password")){
+            } else if (message.equals("Use legitimate link to reset the password")) {
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", message);
                 return "resetpassword";
-            }
-            else if(message.equals("Link to reset the password is expired")){
+            } else if (message.equals("Link to reset the password is expired")) {
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", message);
                 return "resetpassword";
-            }
-            else if(message.equals("Token for the user was not found")){
+            } else if (message.equals("Token for the user was not found")) {
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", message);
                 return "resetpassword";
-            }
-            else{
+            } else {
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", "Failed to reset the password");
                 return "resetpassword";
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             model.getAttribute("resetPasswordToken");
             model.addAttribute("resetPasswordToken", resetPasswordToken);
-            model.addAttribute("resetPasswordMessage","Failed to reset the password");
+            model.addAttribute("resetPasswordMessage", "Failed to reset the password");
             return "resetpassword";
         }
     }
 
     @GetMapping("/accountVerification")
-    public String getEmailVerification(@RequestParam("token") String token, Model model){
+    public String getEmailVerification(@RequestParam("token") String token, Model model) {
         try {
-            System.out.println("My verification token: "+token);
+            System.out.println("My verification token: " + token);
             String message = restTemplate.getForObject("https://tasktrackerbackend-6mlh.onrender.com/verify?token=" + token.trim(), String.class);
-            System.out.println("My message:"+ message);
-            if(message.equals("The account is verified")) {
+            System.out.println("My message:" + message);
+            if (message.equals("The account is verified")) {
                 model.addAttribute("accountVerificationMessage", message);
                 return "accountverification";
             } else if (message.equals("The token is expired, New link for verification was sent to your email.")) {
@@ -185,7 +174,7 @@ public class PageController {
                 model.addAttribute("accountVerificationMessage", "Failed to verify users account.");
                 return "accountverification";
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             return "Failed to verify users account.";
         }
     }
@@ -214,37 +203,33 @@ public class PageController {
             request.put("username", user.getUsername());
             request.put("password", user.getPassword());
 
-        String message = restTemplate.postForObject(url,request,String.class);
-        System.out.println("Message: "+ message);
-        if(message.equals("Verify your account, Click verify button in your email")){
+            String message = restTemplate.postForObject(url, request, String.class);
+            System.out.println("Message: " + message);
+            if (message.equals("Verify your account, Click verify button in your email")) {
 
-            model.addAttribute("signinError",message);
-            return "signin";
-        }
-        else if(message.equals("Incorrect Credentials")){
-            System.out.println("Incorrect Credentials");
-            model.addAttribute("signinError",message);
-            return "signin";
-        }else if(message.equals("You entered unaccepted values")){
-            System.out.println("Incorrect Credentials");
-            model.addAttribute("signinError","Incorrect Credentials");
-            return "signin";
-        }
-        else if(message.contains("Correct credentials now generating token for login ")){
-            System.out.println("Signed In Token: "+message);
-            String value = message.substring(51);
-            session.setAttribute("token", value);
-            return "redirect:/todos";
-        }
-        else{
-            System.out.println("Incorrect Credentials");
-            model.addAttribute("signinError",message);
-            return "signin";
-        }
+                model.addAttribute("signinError", message);
+                return "signin";
+            } else if (message.equals("Incorrect Credentials")) {
+                System.out.println("Incorrect Credentials");
+                model.addAttribute("signinError", message);
+                return "signin";
+            } else if (message.equals("You entered unaccepted values")) {
+                System.out.println("Incorrect Credentials");
+                model.addAttribute("signinError", "Incorrect Credentials");
+                return "signin";
+            } else if (message.contains("Correct credentials now generating token for login ")) {
+                System.out.println("Signed In Token: " + message);
+                String value = message.substring(51);
+                session.setAttribute("token", value);
+                return "redirect:/todos";
+            } else {
+                System.out.println("Incorrect Credentials");
+                model.addAttribute("signinError", message);
+                return "signin";
+            }
 
 
-        }
-        catch(HttpClientErrorException.Unauthorized e){
+        } catch (HttpClientErrorException.Unauthorized e) {
 
             model.addAttribute("signinError", "Incorrect signin credentials");
             return "signin";
@@ -253,7 +238,7 @@ public class PageController {
 
 
     @GetMapping("/")
-    public String openHomePage(){
+    public String openHomePage() {
         return "redirect:/todos";
     }
 
@@ -265,10 +250,10 @@ public class PageController {
 
         try {
 
-            if(session.getAttribute("token") != null){
+            if (session.getAttribute("token") != null) {
 
                 String token = session.getAttribute("token").toString();
-                if(token.length() > 30) {
+                if (token.length() > 30) {
                     System.out.println("if statement");
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
@@ -284,33 +269,32 @@ public class PageController {
                             Task[].class
                     );
 
-                    ResponseEntity<String> username = restTemplate.exchange(
-                            "https://tasktrackerbackend-6mlh.onrender.com/username",
+                    ResponseEntity<Users> profileInfo = restTemplate.exchange(
+                            "https://tasktrackerbackend-6mlh.onrender.com/profileinfo",
                             HttpMethod.GET,
                             entity,
-                            String.class
+                            Users.class
                     );
-                    model.addAttribute("username",username.getBody());
+
+
+                    model.addAttribute("profileInfo", profileInfo.getBody());
 
                     model.addAttribute("tasks", (response.getBody()));
                     return "todos";
-                }
-                else{
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signin";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signin";
             }
-        }
-         catch (Exception e) {
+        } catch (Exception e) {
             return "todos";
         }
     }
 
-    public List<Long> countNumberOfDays(List<Task> mytasks){
+    public List<Long> countNumberOfDays(List<Task> mytasks) {
         LocalDate today = LocalDate.now();
 
         List<Task> datetasks = mytasks;
@@ -319,14 +303,14 @@ public class PageController {
 
         for (Task task : datetasks) {
 
-            if(!task.getDueDate().isEmpty() && task.getDueDate() != null){
+            if (!task.getDueDate().isEmpty() && task.getDueDate() != null) {
                 mydate2.add(LocalDate.parse(task.getDueDate()));
             }
 
         }
 
         ArrayList<Long> daysLeft = new ArrayList<>();
-        for(LocalDate days : mydate2) {
+        for (LocalDate days : mydate2) {
             Long dd = ChronoUnit.DAYS.between(today, days);
             daysLeft.add(dd);
         }
@@ -336,13 +320,13 @@ public class PageController {
 
 
     @GetMapping("/todos/search")
-    public String searchTodos(@RequestParam(value="searchword", required = false) String searchword,
+    public String searchTodos(@RequestParam(value = "searchword", required = false) String searchword,
                               HttpSession session,
                               Model model) {
 
         try {
 
-            if(session.getAttribute("token") != null) {
+            if (session.getAttribute("token") != null) {
                 String token = (String) session.getAttribute("token");
 
                 if (token.length() > 30) {
@@ -374,36 +358,33 @@ public class PageController {
                     model.addAttribute("searchword", searchword);
                     model.addAttribute("tasks", searchResults);
                     return "searchResult";
-                }
-                else{
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signin";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signin";
             }
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return "redirect:/todos";
         }
     }
 
 
     @GetMapping("/todo/{id}")
-        public String viewSingleTask(
+    public String viewSingleTask(
             @PathVariable Long id,
             Model model,
             HttpSession session
-            ) {
+    ) {
 
         try {
 
-            if(session.getAttribute("token") != null){
+            if (session.getAttribute("token") != null) {
 
                 String token = (String) session.getAttribute("token");
-                if(token.length() > 30) {
+                if (token.length() > 30) {
                     HttpHeaders headers = new HttpHeaders();
 
                     headers.set("Authorization", "Bearer " + token);
@@ -421,46 +402,41 @@ public class PageController {
                     model.addAttribute("tasks", task);
 
                     return "viewSingleTask";
-                }
-                else{
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signin";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signin";
             }
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "viewSingleTask";
         }
     }
 
 
     @GetMapping("/todo")
-    public String getPage(HttpSession session, Model model){
+    public String getPage(HttpSession session, Model model) {
         try {
 
-            if(session.getAttribute("token") != null){
+            if (session.getAttribute("token") != null) {
                 String token = (String) session.getAttribute("token");
 
-                if(token.length() > 30) {
+                if (token.length() > 30) {
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
                     return "todo";
-                }else{
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signin";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signin";
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "todo";
         }
     }
@@ -472,10 +448,10 @@ public class PageController {
 
         try {
 
-            if(session.getAttribute("token") != null){
+            if (session.getAttribute("token") != null) {
                 String token = session.getAttribute("token").toString();
 
-                if(token.length() > 30) {
+                if (token.length() > 30) {
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
 
@@ -490,19 +466,16 @@ public class PageController {
                     );
 
                     return "redirect:/todos";
-                }
-                else{
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signin";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signin";
             }
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "todos";
         }
     }
@@ -511,14 +484,14 @@ public class PageController {
     public String updateTask(@PathVariable Long id,
                              @ModelAttribute Task task,
                              HttpSession session,
-                             Model model){
+                             Model model) {
 
         try {
 
-            if(session.getAttribute("token") != null){
+            if (session.getAttribute("token") != null) {
                 String token = (String) session.getAttribute("token");
 
-                if(token.length() > 30) {
+                if (token.length() > 30) {
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
 
@@ -532,33 +505,30 @@ public class PageController {
                             id);
 
                     return "redirect:/todos";
-                }
-                else{
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signin";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signin";
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "redirect:/todos";
         }
     }
 
-      @GetMapping("/completedTasks")
-      public String getCompletedTasks(
-              HttpSession session,
-              Model model){
+    @GetMapping("/completedTasks")
+    public String getCompletedTasks(
+            HttpSession session,
+            Model model) {
 
         try {
 
-            if(session.getAttribute("token") != null){
+            if (session.getAttribute("token") != null) {
                 String token = session.getAttribute("token").toString();
 
-                if(token.length() > 30) {
+                if (token.length() > 30) {
                     HttpHeaders headers = new HttpHeaders();
 
                     headers.set("Authorization", "Bearer " + token);
@@ -575,32 +545,29 @@ public class PageController {
                     List<Task> completedTaskss = Arrays.asList(response.getBody());
                     model.addAttribute("tasks", completedTaskss);
                     return "CompletedTasks";
-                }
-                else{
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signin";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signin";
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "CompletedTasks";
         }
-      }
+    }
 
 
     @PatchMapping("/todo/{id}")
     public String updateCompletion(@PathVariable Long id,
                                    @ModelAttribute Task task,
                                    HttpSession session,
-                                   Model model){
+                                   Model model) {
 
         try {
 
-            if(session.getAttribute("token") != null) {
+            if (session.getAttribute("token") != null) {
                 String token = (String) session.getAttribute("token");
 
                 if (token.length() > 30) {
@@ -616,18 +583,15 @@ public class PageController {
                             Task.class,
                             id);
                     return "redirect:/todos";
-                }
-                else{
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signin";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signin";
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "redirect:/todos";
         }
     }
@@ -640,10 +604,10 @@ public class PageController {
 
         try {
 
-            if(session.getAttribute("token") != null){
+            if (session.getAttribute("token") != null) {
                 String token = (String) session.getAttribute("token");
 
-                if(token.length() > 30) {
+                if (token.length() > 30) {
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
 
@@ -659,53 +623,50 @@ public class PageController {
                     );
 
                     return "redirect:/todos";
-                }else{
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signin";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signin";
             }
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return "redirect:/todos";
         }
     }
 
     @GetMapping("/changePassword")
     public String getChangePasswordPage(HttpSession session,
-                                        Model model){
-        try{
-            if(session.getAttribute("token") != null) {
+                                        Model model) {
+        try {
+            if (session.getAttribute("token") != null) {
                 String token = session.getAttribute("token").toString();
-                if(token.length() > 30) {
+                if (token.length() > 30) {
                     return "changepassword";
-                }else {
-                    model.addAttribute("signinError","Unauthorized");
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
                     return "signinError";
                 }
-            }
-            else{
-                model.addAttribute("signinError","Unauthorized");
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
                 return "signinError";
             }
-        }catch(Exception e){
-            model.addAttribute("changepasswordError","Unauthorized");
+        } catch (Exception e) {
+            model.addAttribute("changepasswordError", "Unauthorized");
             return "changepassword";
         }
     }
 
     @PatchMapping("/changePassword")
-    public String changePassword(@ModelAttribute Users users, HttpSession session, Model model){
-        try{
+    public String changePassword(@ModelAttribute Users users, HttpSession session, Model model) {
+        try {
 
-            if(session.getAttribute("token") != null){
+            if (session.getAttribute("token") != null) {
                 String token = session.getAttribute("token").toString();
 
-                if(token.length() > 30){
+                if (token.length() > 30) {
 
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
@@ -724,31 +685,65 @@ public class PageController {
                     );
 
 
-                    if(response.getBody() != null && response.getBody().equals("Password Changed")) {
+                    if (response.getBody() != null && response.getBody().equals("Password Changed")) {
                         model.addAttribute("changePasswordError", "Password was successfully changed");
                         return "changepassword";
-                    }else if(response.getBody() != null &&  response.getBody().equals("You entered wrong current password")){
+                    } else if (response.getBody() != null && response.getBody().equals("You entered wrong current password")) {
                         model.addAttribute("changePasswordError", response.getBody());
                         return "changepassword";
-                    }else{
+                    } else {
                         model.addAttribute("changePasswordError", response.getBody());
                         return "changepassword";
                     }
-                }
-                else{
+                } else {
                     model.addAttribute("signinError", "Unauthorized");
                     return "redirect:/signin";
                 }
-            }else{
+            } else {
                 model.addAttribute("signinError", "Unauthorized");
                 return "redirect:/signin";
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             model.addAttribute("changePasswordError", e.getMessage());
             return "changepassword";
         }
     }
 
+    @GetMapping("/profile")
+    public String openProfile(HttpSession session, Model model) {
+        try {
+            if (session.getAttribute("token") != null) {
+                String token = (String) session.getAttribute("token");
 
+                if (token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+
+                    HttpEntity<Users> entity = new HttpEntity<>(headers);
+                    ResponseEntity<Users> response = restTemplate.exchange(
+                            "https://tasktrackerbackend-6mlh.onrender.com/profileinfo",
+                            HttpMethod.GET,
+                            entity,
+                            Users.class
+                    );
+
+
+                    model.addAttribute("profileInfo", response.getBody());
+                    return "profile";
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
+                    return "signin";
+                }
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
+                return "signin";
+            }
+        }
+        catch( Exception e){
+        return "redirect:/todos";
+    }
+}
 
 }
