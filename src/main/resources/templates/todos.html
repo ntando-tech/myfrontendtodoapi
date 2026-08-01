@@ -34,6 +34,20 @@
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <div class="col-sm-12 col-md-6 col-xl-6">
+            <div class="bg-light d-flex justify-content-between">
+                <a class="mt-1 p-3 text-primary" href="@{/todos}"><h3 class="text-primary">Task Tracker</h3></a>
+                <div class="  dropdown bg-light " style="text-align: right;">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <img class="rounded-circle me-lg-2" src="img/profile-default.svg" alt="profile pic" style="width: 40px; height: 40px;">
+                        <span class="d-none d-lg-inline-flex text-danger" th:text="${username}"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end  bg-light text-sm-start border-0 rounded-0 rounded-bottom m-0">
+                        <a href="@{/profile}" class="dropdown-item"><i class="fa fa-user">Profile</i></a>
+                        <a href="@{/settings}" class="dropdown-item" ><i class="fa fa-cog"></i>Settings</a>
+                        <a href="@{/signout}" class="dropdown-item"><i class="fa fa-sign-out"></i>Sign Out</a>
+                    </div>
+                </div>
+            </div>
             <div class="h-100 bg-light rounded p-4">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <h6 class="mb-0">Tasks</h6>
@@ -70,8 +84,9 @@
                         </button>
 
                         <!--                         Hidden menu -->
-                        <div class="menu grid-vertical-options">
+                        <div class="menu grid-vertical-options bg-light text-left">
                             <a th:href="@{/todo/{id}(id=${task.id})}" class="bi bi-pencil-square text-start">Edit</a><br>
+                            <a th:href="@{/todo/{id}(id=${task.id})}" class="bi bi-trash text-start">Delete</a><br>
                                   </div>
 
                     </div>
@@ -95,4 +110,13 @@
         menu.style.display = menu.style.display === "block" ? "none" : "block";
     }
 </script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/lib/chart/chart.min.js"></script>
+<script src="/lib/easing/easing.min.js"></script>
+<script src="/lib/waypoints/waypoints.min.js"></script>
+<script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="/lib/tempusdominus/js/moment.min.js"></script>
+<script src="/lib/tempusdominus/js/moment-timezone.min.js"></script>
+<script src="/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 </html>

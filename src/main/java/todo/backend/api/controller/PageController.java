@@ -284,6 +284,14 @@ public class PageController {
                             Task[].class
                     );
 
+                    ResponseEntity<String> username = restTemplate.exchange(
+                            "https://tasktrackerbackend-6mlh.onrender.com/username",
+                            HttpMethod.GET,
+                            entity,
+                            String.class
+                    );
+                    model.addAttribute("username",username.getBody());
+
                     model.addAttribute("tasks", (response.getBody()));
                     return "todos";
                 }
