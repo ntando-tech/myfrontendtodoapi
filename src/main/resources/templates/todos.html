@@ -39,13 +39,13 @@
                 <div class="  dropdown bg-light " style="text-align: right;">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                         <img class="rounded-circle me-lg-2" src="img/profile-default.svg" alt="profile pic" style="width: 40px; height: 40px;">
-                        <div th:each="userInfo:${profileInfo}">
-                        <span class="d-none d-lg-inline-flex text-dark" th:text="${userInfo.username}"></span>
-                        </div>
+
+                        <span class="d-none d-lg-inline-flex text-dark" th:text="${profileInfo.username}"></span>
+
                     </a>
                     <div class="dropdown-menu dropdown-menu-end bg-light text-start border-0 rounded-0 rounded-bottom m-0">
 
-                        <a href="/profile" class="dropdown-item">
+                        <a th:href="@{/profile}" class="dropdown-item">
                             <i class="fa fa-user-circle"></i> My Profile
                         </a>
 
@@ -71,9 +71,9 @@
                             </a>
                         </div>
 
-                        <a th:href="/logout" class="dropdown-item">
-                            <i class="bi bi-box-arrow-in-right"></i> Log Out
-                        </a>
+<!--                        <a th:href="/logout" class="dropdown-item">-->
+<!--                            <i class="bi bi-box-arrow-in-right"></i> Log Out-->
+<!--                        </a>-->
 
                     </div>
                 </div>

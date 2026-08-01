@@ -55,14 +55,14 @@
                     <div th:each="userInfo:${profileInfo}">
                     <div class="mb-3">
                         <label for="profileUsername" class="form-label">Username</label>
-                        <input type="text" class="form-control " th:text="${userInfo.username}" disabled id="profileUsername"
+                        <input type="text" class="form-control " th:value="${userInfo.username}" disabled id="profileUsername"
                                aria-describedby="profileUsernameInfo">
                         <div id="profileUsernameInfo" class="form-text">We'll never share your username with anyone else.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="profileEmail" class="form-label">Email address</label>
-                        <input type="email" class="form-control" th:text="${userInfo.email}" disabled id="profileEmail"
+                        <input type="email" class="form-control" th:value="${userInfo.email}" disabled id="profileEmail"
                                aria-describedby="profileEmail">
                         <div id="profileEmailInfo" class="form-text">We'll never share your email with anyone else.
                         </div>
@@ -70,7 +70,7 @@
 
                     <div class="mb-3">
                         <label for="profileAccountStatus" class="form-label">Account status</label>
-                        <input type="text" class="form-control" th:text="${userInfo.enabled ? 'active' : 'Not Active' }" disabled id="profileAccountStatus"
+                        <input type="text" class="form-control" th:value="${userInfo.enable} ? 'Active' : 'Not Active'" disabled id="profileAccountStatus"
                                aria-describedby="profileAccountInfo">
                         <div id="profileAccountStatusInfo" class="form-text">We'll never share your status with anyone else.
                         </div>
