@@ -217,7 +217,7 @@ public class PageController {
                 System.out.println("Incorrect Credentials");
                 model.addAttribute("signinError", "Incorrect Credentials");
                 return "signin";
-            } else if (message.contains("Correct credentials now generating token for login ")) {
+            } else if (message.contains("Correct credentials now generating token for login")) {
                 System.out.println("Signed In Token: " + message);
                 String value = message.substring(51);
                 session.setAttribute("token", value);
@@ -283,11 +283,11 @@ public class PageController {
                     return "todos";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
-                    return "signin";
+                    return "redirect:/signin";
                 }
             } else {
                 model.addAttribute("signinError", "Unauthorized");
-                return "signin";
+                return "redirect:/signin";
             }
         } catch (Exception e) {
             return "todos";
@@ -647,11 +647,11 @@ public class PageController {
                     return "changepassword";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
-                    return "signinError";
+                    return "signin";
                 }
             } else {
                 model.addAttribute("signinError", "Unauthorized");
-                return "signinError";
+                return "signin";
             }
         } catch (Exception e) {
             model.addAttribute("changepasswordError", "Unauthorized");
@@ -734,16 +734,93 @@ public class PageController {
                     return "profile";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
-                    return "signin";
+                    return "redirect:/signin";
                 }
             } else {
                 model.addAttribute("signinError", "Unauthorized");
-                return "signin";
+                return "redirect:/signin";
             }
         }
         catch( Exception e){
         return "redirect:/todos";
     }
 }
+
+    @GetMapping("/deleteAccount")
+    public String openDeleteAccount(HttpSession session, Model model) {
+        try {
+            if (session.getAttribute("token") != null) {
+                String token = (String) session.getAttribute("token");
+
+                if (token.length() > 30) {
+                    return "deleteAccount";
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
+                    return "redirect:/signin";
+                }
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
+                return "redirect:/signin";
+            }
+        }
+        catch( Exception e){
+            model.addAttribute("signinError", "Unauthorized");
+            return "redirect:/signin";
+        }
+    }
+
+    @DeleteMapping("/deleteAccount")
+    public String deleteAccount(HttpSession session, Model model) {
+        try {
+            model.addAttribute("accountDeletionErrorMessage", "");
+
+            if (session.getAttribute("token") != null) {
+                String token = (String) session.getAttribute("token");
+
+                if (token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                    HttpEntity<Users> entity = new HttpEntity<>(headers);
+//                    ResponseEntity<Users> userInfo = restTemplate.exchange(
+//                            "https://tasktrackerbackend-6mlh.onrender.com/profileinfo",
+//                            HttpMethod.GET,
+//                            entity,
+//                            Users.class
+//                    );
+
+//                    Users currentUser = userInfo.getBody();
+//                    HttpEntity<Users> entity2 = new HttpEntity<>(currentUser,headers);
+                    ResponseEntity<String> response2 = restTemplate.exchange(
+                            "https://tasktrackerbackend-6mlh.onrender.com/accountDeletion",
+                            HttpMethod.DELETE,
+                            entity,
+                            String.class
+                    );
+                    if(response2.getBody().equals("Account deleted successfully")){
+                        return "redirect:/signin";
+                    }
+                    else if(response2.getBody().equals("Something strange happened, User was not found")){
+                        model.addAttribute("accountDeletionErrorMessage", response2.getBody());
+                        return "deleteAccount";
+                    }
+                    else {
+                        model.addAttribute("accountDeletionErrorMessage", response2.getBody());
+                        return "deleteAccount";
+                    }
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
+                    return "redirect:/signin";
+                }
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
+                return "redirect:/signin";
+            }
+        }
+        catch( Exception e){
+            return "redirect:/todos";
+        }
+    }
 
 }
