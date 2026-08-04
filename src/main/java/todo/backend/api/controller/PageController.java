@@ -823,4 +823,25 @@ public class PageController {
         }
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session, Model model){
+        try{
+            if(session.getAttribute("token") != null){
+                String token = session.getAttribute("token").toString();
+                if(token.length() > 30){
+                    session.invalidate();
+                    return "redirect:/signin";
+                }else{
+                    model.addAttribute("signinError", "Unauthorized");
+                    return "redirect:/signin";
+                }
+            }else{
+                model.addAttribute("signinError", "Unauthorized");
+                return "redirect:/signin";
+            }
+        } catch (Exception e) {
+            return "redirect:/todos";
+        }
+    }
+
 }
