@@ -83,7 +83,7 @@ function checkPasswords() {
 }
 
 function searchTask() {
-let keyword = document.getElementById("searchInput").value;
+let keyword = document.getElementById("searchInput").value.trim();
 fetch("/todos/search?searchword="+encodeURIComponent(keyword))
 .then(res => res.text())
 .then(data => {
@@ -134,6 +134,13 @@ return false;
 function signout_button_yes(){
 document.getElementById("signout").click();
 }
+
+function delete_todostask_button_no(){
+   return false;
+    }
+function delete_todostask_button_yes(){
+    document.getElementById("deleteTodosTask").click();
+    }
 
 function showLoader() {
     document.getElementById("loaderOverlay").style.display = "flex";
