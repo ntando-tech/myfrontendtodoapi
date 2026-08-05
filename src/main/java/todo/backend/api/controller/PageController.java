@@ -823,7 +823,7 @@ public class PageController {
         }
     }
 
-    @GetMapping("/signout")
+    @PostMapping("/signout")
     public String signout(HttpSession session, Model model){
         try{
             if(session.getAttribute("token") != null){

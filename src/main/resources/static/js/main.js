@@ -127,6 +127,13 @@ function delete_account_button_yes(){
 document.getElementById("deleteAccount").click();
 }
 
+function signout_button_no(){
+return false;
+}
+
+function signout_button_yes(){
+document.getElementById("signout").click();
+}
 
 function showLoader() {
     document.getElementById("loaderOverlay").style.display = "flex";
