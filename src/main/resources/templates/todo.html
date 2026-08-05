@@ -68,7 +68,7 @@
                     <div class="mb-3">
                         <label for="taskDueDate" class="form-label">Due Date</label>
                         <!--                        <input type="hidden" th:field="*{created}"/>-->
-                        <input class="form-control" type="date" name="dueDate" th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"  id="taskDueDate">
+                        <input class="form-control" type="date" name="dueDate" th:min="${todaysDate}"  id="taskDueDate">
                     </div>
                     <div class="d-flex justify-content-between">
                         <button type="reset"  class="btn btn-warning text-end">Clear</button>

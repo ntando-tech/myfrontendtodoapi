@@ -427,6 +427,7 @@ public class PageController {
                 if (token.length() > 30) {
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
+                    model.addAttribute("todaysDate",LocalDate.now());
                     return "todo";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
