@@ -242,6 +242,11 @@ public class PageController {
         return "redirect:/todos";
     }
 
+    @GetMapping("/404")
+    public String showErrorPage(){
+        return "404";
+    }
+
     @GetMapping("/todos")
     public String getTasks(
             HttpSession session,
