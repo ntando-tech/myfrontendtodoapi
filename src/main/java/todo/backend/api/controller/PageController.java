@@ -21,7 +21,8 @@ import java.util.*;
 
 public class PageController {
 
-    private final String API_URL = "https://tasktrackerbackend-6mlh.onrender.com/api/tasks";
+    private final String API_URL = "https://tasktrackerbackend.up.railway.app/api/tasks";
+    private final String NORMAL_API_URL = "https://tasktrackerbackend.up.railway.app";
 
     private final RestTemplate restTemplate;
 
@@ -40,7 +41,7 @@ public class PageController {
     public String signup(@ModelAttribute Users users, Model model) {
         try {
             System.out.println("Before sending data to backend");
-            String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/register", users, String.class));
+            String message = String.valueOf(restTemplate.postForObject(NORMAL_API_URL+"/register", users, String.class));
             System.out.println("Starting if statements");
             if (message.equals("Username Already Exists")) {
                 model.addAttribute("showPasswordMessage", "Username already exists");
@@ -74,7 +75,7 @@ public class PageController {
         try {
             model.addAttribute("forgotPasswordMessage", "");
 
-            String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/forgotpassword", users, String.class));
+            String message = String.valueOf(restTemplate.postForObject(NORMAL_API_URL+"/forgotpassword", users, String.class));
             System.out.println("Message:" + message);
 
             if (message.equals("Link to reset the password was sent.")) {
@@ -117,7 +118,7 @@ public class PageController {
         try {
 
             System.out.println("Reset token on the path " + resetPasswordToken);
-            String message = String.valueOf(restTemplate.postForObject("https://tasktrackerbackend-6mlh.onrender.com/resetpassword?resetPasswordToken=" + resetPasswordToken, users, String.class));
+            String message = String.valueOf(restTemplate.postForObject(NORMAL_API_URL+"/resetpassword?resetPasswordToken=" + resetPasswordToken, users, String.class));
 
             if (message.equals("Password was resetted")) {
                 model.addAttribute("resetPasswordMessage", "");
@@ -156,7 +157,7 @@ public class PageController {
     public String getEmailVerification(@RequestParam("token") String token, Model model) {
         try {
             System.out.println("My verification token: " + token);
-            String message = restTemplate.getForObject("https://tasktrackerbackend-6mlh.onrender.com/verify?token=" + token.trim(), String.class);
+            String message = restTemplate.getForObject(NORMAL_API_URL+"/verify?token=" + token.trim(), String.class);
             System.out.println("My message:" + message);
             if (message.equals("The account is verified")) {
                 model.addAttribute("accountVerificationMessage", message);
@@ -196,7 +197,7 @@ public class PageController {
             model.addAttribute("signinError", "");
             RestTemplate restTemplate = new RestTemplate();
 
-            String url = "https://tasktrackerbackend-6mlh.onrender.com/login";
+            String url = NORMAL_API_URL+"/login";
 
             Map<String, String> request = new HashMap<>();
 
@@ -275,7 +276,7 @@ public class PageController {
                     );
 
                     ResponseEntity<Users> profileInfo = restTemplate.exchange(
-                            "https://tasktrackerbackend-6mlh.onrender.com/profileinfo",
+                            NORMAL_API_URL+"/profileinfo",
                             HttpMethod.GET,
                             entity,
                             Users.class
@@ -684,7 +685,7 @@ public class PageController {
                     //RestTemplate restTemplate = new RestTemplate();
 
                     ResponseEntity<String> response = restTemplate.exchange(
-                            "https://tasktrackerbackend-6mlh.onrender.com/changepassword",
+                            NORMAL_API_URL+"/changepassword",
                             HttpMethod.PATCH,
                             entity,
                             String.class
@@ -729,7 +730,7 @@ public class PageController {
 
                     HttpEntity<Users> entity = new HttpEntity<>(headers);
                     ResponseEntity<Users> response = restTemplate.exchange(
-                            "https://tasktrackerbackend-6mlh.onrender.com/profileinfo",
+                            NORMAL_API_URL+"/profileinfo",
                             HttpMethod.GET,
                             entity,
                             Users.class
@@ -790,7 +791,7 @@ public class PageController {
                     headers.setContentType(MediaType.APPLICATION_JSON);
                     HttpEntity<Users> entity = new HttpEntity<>(headers);
 //                    ResponseEntity<Users> userInfo = restTemplate.exchange(
-//                            "https://tasktrackerbackend-6mlh.onrender.com/profileinfo",
+//                            NORMAL_API_URL+"/profileinfo",
 //                            HttpMethod.GET,
 //                            entity,
 //                            Users.class
@@ -799,7 +800,7 @@ public class PageController {
 //                    Users currentUser = userInfo.getBody();
 //                    HttpEntity<Users> entity2 = new HttpEntity<>(currentUser,headers);
                     ResponseEntity<String> response2 = restTemplate.exchange(
-                            "https://tasktrackerbackend-6mlh.onrender.com/accountDeletion",
+                            NORMAL_API_URL+"/accountDeletion",
                             HttpMethod.DELETE,
                             entity,
                             String.class
@@ -849,5 +850,4 @@ public class PageController {
             return "redirect:/todos";
         }
     }
-
 }
