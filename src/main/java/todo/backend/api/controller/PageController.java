@@ -93,7 +93,11 @@ public class PageController {
             } else if (message.contains("Failed to send reset link to forgot password controller")) {
                 model.addAttribute("forgotPasswordMessage", message);
                 return "forgotpassword";
-            } else {
+            }else if (message.contains("Failed to send email to password")) {
+                model.addAttribute("forgotPasswordMessage", message);
+                return "forgotpassword";
+            }
+            else {
                 model.addAttribute("forgotPasswordMessage", "Email was not found");
                 return "forgotpassword";
             }
