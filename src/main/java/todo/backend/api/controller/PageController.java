@@ -854,4 +854,46 @@ public class PageController {
             return "redirect:/todos";
         }
     }
+
+    @GetMapping("/calendar")
+    public String showCalendar(HttpSession session,Model model){
+        try {
+            if (session.getAttribute("token") != null) {
+                String token = (String) session.getAttribute("token");
+
+                if (token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization","Bearer "+token);
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+
+                    HttpEntity<String> entity = new HttpEntity<>(headers);
+
+                    ResponseEntity<Task[]> response = restTemplate.exchange(
+                            API_URL + "/todos",
+                            HttpMethod.GET,
+                            entity,
+                            Task[].class
+                    );
+
+                    List<Task> usersTask = Arrays.asList(response.getBody());
+                    model.addAttribute("tasks", usersTask);
+
+                    return "calendar";
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
+                    return "redirect:/signin";
+                }
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
+                return "redirect:/signin";
+            }
+        }
+        catch( Exception e){
+            model.addAttribute("signinError", "Unauthorized");
+            return "redirect:/signin";
+        }
+    }
+
+
 }
