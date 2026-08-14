@@ -226,7 +226,7 @@
     }
 
 
-    function closeModal() {
+    function closeCalendarModal() {
 
         document.getElementById(
             "taskModal"
@@ -237,12 +237,12 @@
 
     window.onclick = function(event) {
 
-        const modal =
+        const calendarModal =
             document.getElementById("taskModal");
 
-        if (event.target === modal) {
+        if (event.target === calendarModal) {
 
-            closeModal();
+            closeCalendarModal();
 
         }
 

@@ -412,7 +412,7 @@
 
         /* Task popup */
 
-        .modal {
+        .calendarModal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -426,7 +426,7 @@
             align-items: center;
         }
 
-        .modal-content {
+        .calendarModal-content {
             background: white;
             width: 90%;
             max-width: 500px;
@@ -434,7 +434,7 @@
             padding: 25px;
         }
 
-        .modal-content h2 {
+        .calendarModal-content h2 {
             margin-top: 0;
         }
 
