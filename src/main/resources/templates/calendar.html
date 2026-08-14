@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
+
     <meta charset="utf-8">
-    <title>Account Verification</title>
+    <title>Calendar</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -29,33 +31,100 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
 </head>
 
 <body>
-<div class="container-fluid position-relative bg-white d-flex p-0">
 
-    <!-- Blank Start -->
-    <div class="container-fluid  px-1">
-        <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
-            <div class="col-md-4 text-center">
-                <h3 class="text-primary">Task Tracker</h3>
+<div class="calendar-container">
 
+    <div class="calendar-header">
 
-                <h6 th:text="${accountVerificationMessage}"></h6>
+        <h1 id="monthYear"></h1>
 
-            </div>
+        <div >
+        <div class="calendarNavigation">
+
+            <button onclick="previousMonth()">
+                Previous
+            </button>
+
+            <button onclick="goToToday()">
+                Today
+            </button>
+
+            <button onclick="nextMonth()">
+                Next
+            </button>
 
         </div>
 
+    </div>
+</div>
+
+    <div class="weekdays">
+
+        <div class="weekday">Sun</div>
+        <div class="weekday">Mon</div>
+        <div class="weekday">Tue</div>
+        <div class="weekday">Wed</div>
+        <div class="weekday">Thu</div>
+        <div class="weekday">Fri</div>
+        <div class="weekday">Sat</div>
 
     </div>
-    <!-- Blank End -->
 
+
+    <div id="calendarDays"
+         class="days">
+
+    </div>
 
 </div>
-<!-- Content End -->
 
-<!--</div>-->
+
+<!-- Task Details Modal -->
+
+<div id="taskModal"
+     class="modal">
+
+    <div class="modal-content">
+
+        <span class="close"
+              onclick="closeModal()">
+            &times;
+        </span>
+
+        <h2 id="modalTitle"></h2>
+
+        <p>
+            <strong>Description:</strong>
+        </p>
+
+        <p id="modalDescription"></p>
+
+        <p>
+            <strong>Priority:</strong>
+        </p>
+
+        <p id="modalPriority"></p>
+        <p>
+            <strong>Due Date:</strong>
+        </p>
+
+        <p id="modalDate"></p>
+
+    </div>
+
+</div>
+
+
+
+<script th:inline="javascript">
+
+    const tasks = /*[[${tasks}]]*/ [];
+</script>
+
 
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -67,9 +136,7 @@
 <script src="lib/tempusdominus/js/moment.min.js"></script>
 <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
 <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-<!-- Template Javascript -->
-<script src="js/main.js"></script>
+<script src="js/calendar.js"></script>
 </body>
 
 </html>
