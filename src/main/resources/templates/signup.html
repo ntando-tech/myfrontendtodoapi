@@ -71,7 +71,7 @@
                     </p>
                     <div class="invalid-feedback"></div>
                 </div>
-                    <p id="showPasswordMessage"  th:text="${showPasswordMessage}"></p>
+                    <p id="showPasswordMessage"><span class="text-danger" th:text="${showPasswordMessage}"></span></p>
                 <button type="submit" id="signupBtn" class="btn btn-primary py-3 w-100 mb-4" >Sign Up</button>
                 <p class="text-center mb-0">Already have an Account? <a th:href="@{/signin}">Sign In</a></p>
                 </form>
