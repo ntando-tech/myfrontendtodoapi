@@ -101,7 +101,7 @@
                         </div>
 
                         <button hidden type="submit" id="saveTask" name="_method" value="put" class="btn btn-primary">Save</button>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">
+                        <button type="button" id="saveTask2" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveModal">
                             Save
                         </button>
                     </div>
@@ -225,6 +225,11 @@
     </div>
 </div>
 <script src="/js/main.js"></script>
+
+<script th:inline="javascript">
+    const tasks = /*[[${tasks}]]*/ [];
+</script>
+<script src="/js/editTask.js"></script>
 </body>
 </html>
 
