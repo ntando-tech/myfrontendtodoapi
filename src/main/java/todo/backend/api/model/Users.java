@@ -34,9 +34,11 @@ public class Users {
     private String resetPasswordToken;
     private Date resetPasswordExpiration;
 
+    private boolean rememberMe;
+
     public Users(){}
 
-    public Users(String username, String email, String password,String verificationToken,Date verificationTokenExpiration,String resetPasswordToken,Date resetPasswordExpiration ) {
+    public Users(String username, String email, String password,String verificationToken,Date verificationTokenExpiration,String resetPasswordToken,Date resetPasswordExpiration,boolean rememberMe ) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -46,6 +48,7 @@ public class Users {
         this.verificationTokenExpiration = verificationTokenExpiration;
         this.resetPasswordToken = resetPasswordToken;
         this.resetPasswordExpiration = resetPasswordExpiration;
+        this.rememberMe = rememberMe;
     }
 
 

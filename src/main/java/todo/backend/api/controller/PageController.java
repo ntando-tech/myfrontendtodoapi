@@ -200,14 +200,23 @@ public class PageController {
 
             model.addAttribute("signinError", "");
             RestTemplate restTemplate = new RestTemplate();
+//            System.out.println("Remember Me checkbox: "+user.isRememberMe());
 
             String url = NORMAL_API_URL+"/login";
 
             Map<String, String> request = new HashMap<>();
 
-            request.put("username", user.getUsername());
-            request.put("password", user.getPassword());
+            request.put("username", user.getUsername().trim());
+            request.put("password", user.getPassword().trim());
+            request.put("rememberMe", String.valueOf(user.isRememberMe()));
 
+//            request.put("email", String.valueOf(user.isRememberMe()));
+//            Users user2 = new Users();
+//            user2.setUsername(user.getUsername());
+//            user2.setPassword(user.getPassword());
+//            user2.setRememberMe(user.isRememberMe());
+            System.out.println("String RememberMe value:"+String.valueOf(user.isRememberMe()));
+            System.out.println("Boolean RememberMe value:"+user.isRememberMe());
             String message = restTemplate.postForObject(url, request, String.class);
             System.out.println("Message: " + message);
             if (message.equals("Verify your account, Click verify button in your email")) {
@@ -265,6 +274,7 @@ public class PageController {
                 String token = session.getAttribute("token").toString();
                 if (token.length() > 30) {
                     System.out.println("if statement");
+                    System.out.println("My token: "+session.getAttribute("token"));
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
 
@@ -278,13 +288,14 @@ public class PageController {
                             entity,
                             Task[].class
                     );
-
+                    System.out.println("After Todos: "+response.getBody());
                     ResponseEntity<Users> profileInfo = restTemplate.exchange(
                             NORMAL_API_URL+"/profileinfo",
                             HttpMethod.GET,
                             entity,
                             Users.class
                     );
+                    System.out.println("Username: "+profileInfo.getBody());
 
 
                     model.addAttribute("profileInfo", profileInfo.getBody());
@@ -300,6 +311,7 @@ public class PageController {
                 return "redirect:/signin";
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "todos";
         }
     }
