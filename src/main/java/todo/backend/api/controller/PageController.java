@@ -895,5 +895,89 @@ public class PageController {
         }
     }
 
+//    @GetMapping("/passedDueDate")
+//    public String getPassedDueDate(
+//            HttpSession session,
+//            Model model) {
+//
+//        try {
+//
+//            if (session.getAttribute("token") != null) {
+//                String token = session.getAttribute("token").toString();
+//
+//                if (token.length() > 30) {
+//                    HttpHeaders headers = new HttpHeaders();
+//
+//                    headers.set("Authorization", "Bearer " + token);
+//
+//                    HttpEntity<String> entity = new HttpEntity<>(headers);
+//
+//                    ResponseEntity<Task[]> response = restTemplate.exchange(
+//                            API_URL + "/passedDueDate",
+//                            HttpMethod.GET,
+//                            entity,
+//                            Task[].class
+//                    );
+//
+//                    List<Task> tasks2222 = Arrays.asList(response.getBody());
+////                    for(Task completedTaskss1 : tasks){
+////                        System.out.println(completedTaskss1.getTitle() + "\n");
+////                    }
+//                    model.addAttribute("tasks", tasks2222);
+//                    return "passedDueDate";
+//                } else {
+//                    model.addAttribute("signinError", "Unauthorized");
+//                    return "redirect:/signin";
+//                }
+//            } else {
+//                model.addAttribute("signinError", "Unauthorized");
+//                return "redirect:/signin";
+//            }
+//        } catch (Exception e) {
+//            return "redirect:/todos";
+//        }
+//    }
+@GetMapping("/passedDueDate")
+public String getPassedDueDate(
+        HttpSession session,
+        Model model) {
+
+    try {
+
+        String token = (String) session.getAttribute("token");
+
+        if (token == null || token.isEmpty()) {
+            return "redirect:/signin";
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Task[]> response = restTemplate.exchange(
+                API_URL + "/passedDueDate",
+                HttpMethod.GET,
+                entity,
+                Task[].class
+        );
+
+        Task[] taskArray = response.getBody();
+
+        List<Task> tasks = taskArray != null
+                ? Arrays.asList(taskArray)
+                : new ArrayList<>();
+
+        model.addAttribute("tasks", tasks);
+
+        return "passedDueDate";
+
+    } catch (Exception e) {
+
+        System.out.println(e.getMessage());
+
+        return "passedDueDate";
+    }
+}
 
 }
