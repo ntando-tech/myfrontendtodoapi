@@ -29,7 +29,7 @@
     <!-- Template Stylesheet -->
     <link href="/css/style.css" rel="stylesheet">
 </head>
-<body class="content">
+<body class="content pb-80px">
 <!-- Chart Start -->
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
@@ -127,7 +127,7 @@
             <div class="h-100 bg-light rounded p-4">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <h6 class="mb-0">Tasks</h6>
-                    <a th:href="@{/completedTasks}">Show Completed</a>
+                    <a th:href="@{/passedDueDate}">Show Passed Due Date</a>
                 </div>
 
                 <div class="d-flex mb-2 mt-3">
@@ -196,9 +196,29 @@
             </div>
 
             </div>
+
         </div>
+        <nav class="bottom-nav">
+            <a th:href="@{/todos}" class="nav-item"  th:classappend="${currentPage == 'hometab'} ? 'active' : ''">
+                <i class="bi bi-house"></i>
+                <span>Home</span>
+            </a>
 
+            <a th:href="@{/calendar}" class="nav-item">
+                <i class="bi bi-calendar"></i>
+                <span>Calendar</span>
+            </a>
 
+            <a th:href="@{/completedTasks}" class="nav-item">
+                <i class="fa fa-tasks"></i>
+                <span>Completed</span>
+            </a>
+
+            <a th:href="@{/profile}" class="nav-item">
+                <i class="=bi bi-person"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
     </div>
 </div>
 

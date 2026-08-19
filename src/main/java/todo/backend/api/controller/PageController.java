@@ -301,6 +301,8 @@ public class PageController {
                     model.addAttribute("profileInfo", profileInfo.getBody());
 
                     model.addAttribute("tasks", (response.getBody()));
+                    model.addAttribute("currentPage","hometab");
+
                     return "todos";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -567,6 +569,7 @@ public class PageController {
 
                     List<Task> completedTaskss = Arrays.asList(response.getBody());
                     model.addAttribute("tasks", completedTaskss);
+                    model.addAttribute("currentPage","completedtaskstab");
                     return "CompletedTasks";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -754,6 +757,7 @@ public class PageController {
 
 
                     model.addAttribute("profileInfo", response.getBody());
+                    model.addAttribute("currentPage","profiletab");
                     return "profile";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -890,7 +894,7 @@ public class PageController {
 
                     List<Task> usersTask = Arrays.asList(response.getBody());
                     model.addAttribute("tasks", usersTask);
-
+                    model.addAttribute("currentPage","calendartab");
                     return "calendar";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
