@@ -96,9 +96,10 @@
                 <span>Calendar</span>
             </a>
 
-            <a th:href="@{/todos}" class="nav-item" >
-                <i class="fa fa-tasks"></i>
-                <span>Completed</span>
+            <a th:href="@{/notifications}" class="nav-item" >
+                <i class="bi bi-bell"></i>
+                <sub class="text-danger" th:text="{noOfNotifications}"></sub>
+                <span>Notifications</span>
             </a>
 
             <a th:href="@{/profile}" class="nav-item" th:classappend="${currentPage == 'profiletab'} ? 'active' : ''">

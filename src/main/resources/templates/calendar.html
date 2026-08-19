@@ -129,12 +129,13 @@
 
                         <a th:href="@{/calendar}" class="nav-item"  th:classappend="${currentPage == 'calendartab'} ? 'active' : ''">
                             <i class="bi bi-calendar"></i>
+                            <sub class="text-danger" th:text="{noOfNotifications}"></sub>
                             <span>Calendar</span>
                         </a>
 
                         <a th:href="@{/CompletedTasks}" class="nav-item">
-                            <i class="fa fa-tasks"></i>
-                            <span>Completed</span>
+                            <i class="bi bi-bell"></i>
+                            <span>Notifications</span>
                         </a>
 
                         <a th:href="@{/profile}" class="nav-item">

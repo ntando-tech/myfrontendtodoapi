@@ -996,4 +996,45 @@ public String getPassedDueDate(
     }
 }
 
+    @GetMapping("/notifications")
+    public String getNoOfNotifications(
+            HttpSession session,
+            Model model) {
+
+        try {
+
+            String token = (String) session.getAttribute("token");
+
+            if (token == null || token.isEmpty()) {
+                return "redirect:/signin";
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + token);
+
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<Integer> response = restTemplate.exchange(
+                    API_URL + "/noOfNotifications",
+                    HttpMethod.GET,
+                    entity,
+                    Integer.class
+            );
+
+            int noOfNotifications = response.getBody();
+
+
+
+            model.addAttribute("noOfNotifications", noOfNotifications);
+
+            return "notifications";
+
+        } catch (Exception e) {
+
+            System.out.println(e.getMessage());
+            model.addAttribute("noOfNotifications", 0);
+            return "notifications";
+        }
+    }
+
 }
