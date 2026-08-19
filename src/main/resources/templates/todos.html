@@ -29,12 +29,12 @@
     <!-- Template Stylesheet -->
     <link href="/css/style.css" rel="stylesheet">
 </head>
-<body class="content pb-80px">
+<body class="bodyContainer">
 <!-- Chart Start -->
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <div class="col-sm-12 col-md-6 col-xl-6">
-            <div class="bg-light d-flex justify-content-between">
+<div class="container-fluid pt-4">
+    <div class="row g-4 ">
+        <div class="col-sm-12  col-xl-12">
+            <div class="bg-light  d-flex justify-content-between">
                 <a class="mt-1 p-3 text-primary" href="@{/todos}"><h3 class="text-primary">Task Tracker</h3></a>
                 <div class="  dropdown bg-light " style="text-align: right;">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -210,10 +210,9 @@
             </a>
 
             <a th:href="@{/completedTasks}" class="nav-item">
-                <i class="fa fa-tasks"></i>
+                <i class="fa fa-tasks mb-2"></i>
                 <span>Completed</span>
             </a>
-
             <a th:href="@{/profile}" class="nav-item">
                 <i class="=bi bi-person"></i>
                 <span>Profile</span>

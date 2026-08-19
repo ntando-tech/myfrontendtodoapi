@@ -32,11 +32,11 @@
     <!-- Template Stylesheet -->
     <link href="/css/style.css" rel="stylesheet">
 </head>
-<body class="content">
-<!-- Form Start -->
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <div class="col-sm-12 col-xl-6">
+<body class="bodyContainer">
+<!-- Chart Start -->
+<div class="container-fluid pt-4">
+    <div class="row g-4 ">
+        <div class="col-sm-12  col-xl-12">
             <div class="bg-light rounded h-100 p-4">
                 <div class="mb-3">
                     <a th:href="@{/todos}" class="bi bi-arrow-left-circle-fill">Back</a>
@@ -103,6 +103,27 @@
                 </form>
             </div>
         </div>
+
+        <nav class="bottom-nav">
+            <a th:href="@{/todos}" class="nav-item">
+                <i class="bi bi-house"></i>
+                <span>Home</span>
+            </a>
+
+            <a th:href="@{/calendar}" class="nav-item">
+                <i class="bi bi-calendar"></i>
+                <span>Calendar</span>
+            </a>
+
+            <a th:href="@{/completedTasks}" class="nav-item">
+                <i class="fa fa-tasks mb-2"></i>
+                <span>Completed</span>
+            </a>
+            <a th:href="@{/profile}" class="nav-item">
+                <i class="=bi bi-person"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
     </div>
 </div>
 <script src="/js/main.js"></script>

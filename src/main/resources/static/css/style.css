@@ -519,3 +519,26 @@
     color: #0d6efd;
     font-weight: bold;
 }
+
+
+.bodyContainer{
+    margin-left: 20%;
+    margin-right: 20%;
+    padding-top: 3%;
+}
+
+@media(max-width: 412px){
+.bodyContainer{
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-top: 2px;
+}
+}
+
+@media(max-width:1024px){
+.bodyContainer{
+    margin-left:1%;
+    margin-right:1%;
+    padding-top:5%;
+}
+}
