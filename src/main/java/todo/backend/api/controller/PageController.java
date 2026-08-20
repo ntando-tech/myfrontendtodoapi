@@ -23,6 +23,7 @@ public class PageController {
 
     private final String API_URL = "https://tasktrackerbackend.up.railway.app/api/tasks";
     private final String NORMAL_API_URL = "https://tasktrackerbackend.up.railway.app";
+    private final String NOTIFICATION_API_URL = "https://tasktrackerbackend.up.railway.app/api/notifications";
 
     private final RestTemplate restTemplate;
 
@@ -1046,19 +1047,38 @@ public String getPassedDueDate(
     }
 
     public int getNoOfNotification(String usertoken, HttpSession session) {
-//        String token = (String) session.getAttribute(usertoken.trim());
+        String token = (String) session.getAttribute(usertoken.trim());
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + usertoken);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
+        System.out.println("AAbout to get No of notifications");
+        System.out.println("Usertoken:"+usertoken);
         ResponseEntity<Integer> response = restTemplate.exchange(
-                API_URL + "/noOfNotifications",
+                NOTIFICATION_API_URL + "/noOfNotification",
                 HttpMethod.GET,
                 entity,
                 Integer.class
         );
         int value = response.getBody() == null ?0 :response.getBody();
-        return value;
+        return 2;
     }
+
+//    public int getNoOfNotification(String usertoken, HttpSession session) {
+////        String token = (String) session.getAttribute(usertoken.trim());
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", "Bearer " + usertoken);
+//
+//        HttpEntity<String> entity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<Integer> response = restTemplate.exchange(
+//                API_URL + "/noOfNotifications",
+//                HttpMethod.GET,
+//                entity,
+//                Integer.class
+//        );
+//        int value = response.getBody() == null ?0 :response.getBody();
+//        return value;
+//    }
 }
