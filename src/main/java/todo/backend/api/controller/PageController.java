@@ -995,7 +995,7 @@ public String getPassedDueDate(
                 : new ArrayList<>();
 
         model.addAttribute("tasks", tasks);
-        model.addAttribute("noOfNotifications", String.valueOf(getNoOfNotification(token, session)));
+        model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
         return "passedDueDate";
 
     } catch (Exception e) {
@@ -1019,23 +1019,22 @@ public String getPassedDueDate(
                 return "redirect:/signin";
             }
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + token);
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.set("Authorization", "Bearer " + token);
+//
+//            HttpEntity<String> entity = new HttpEntity<>(headers);
 
-            HttpEntity<String> entity = new HttpEntity<>(headers);
+//            ResponseEntity<Integer> response = restTemplate.exchange(
+//                    API_URL + "/noOfNotifications",
+//                    HttpMethod.GET,
+//                    entity,
+//                    Integer.class
+//            );
 
-            ResponseEntity<Integer> response = restTemplate.exchange(
-                    API_URL + "/noOfNotifications",
-                    HttpMethod.GET,
-                    entity,
-                    Integer.class
-            );
+//            int noOfNotifications = response.getBody();
 
-            int noOfNotifications = response.getBody();
-            System.out.println("Value from notification Page: "+getNoOfNotification(token, session));
-            //int noticationValue = getNoOfNotification(token, session);
             model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
-            //System.out.print("Value from method :"+ noticationValue);
+            model.addAttribute("currentPage","notificationstab");
             return "notifications";
 
         } catch (Exception e) {
@@ -1047,21 +1046,19 @@ public String getPassedDueDate(
     }
 
     public int getNoOfNotification(String usertoken, HttpSession session) {
-        String token = (String) session.getAttribute(usertoken.trim());
+//        String token = (String) session.getAttribute(usertoken.trim());
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + token);
+        headers.set("Authorization", "Bearer " + usertoken);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(
+        ResponseEntity<Integer> response = restTemplate.exchange(
                 API_URL + "/noOfNotifications",
                 HttpMethod.GET,
                 entity,
-                String.class
+                Integer.class
         );
-        String noOfNotifications = response.getBody();
-
-        System.out.println("Notification number: "+noOfNotifications);
-        return Integer.parseInt(noOfNotifications);
+        int value = response.getBody() == null ?0 :response.getBody();
+        return value;
     }
 }
