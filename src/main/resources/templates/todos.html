@@ -51,6 +51,9 @@
                         <a th:href="@{/calendar}" class="dropdown-item">
                             <i class="fa fa-calendar me-2"></i>Calendar
                         </a>
+                        <a th:href="@{/passedDueDate}" class="dropdown-item">
+                            <i class="fa fa-calendar me-2"></i>Passed Due Date
+                        </a>
                         <a th:href="@{/changePassword}" class="dropdown-item">
                             <i class="fa fa-key me-2"></i>Change Password
                         </a>
@@ -127,7 +130,7 @@
             <div class="h-100 bg-light rounded p-4">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <h6 class="mb-0">Tasks</h6>
-                    <a th:href="@{/passedDueDate}">Show Passed Due Date</a>
+                    <a th:href="@{/completedTasks}">Show Completed</a>
                 </div>
 
                 <div class="d-flex mb-2 mt-3">
