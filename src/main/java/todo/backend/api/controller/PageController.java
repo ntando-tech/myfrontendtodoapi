@@ -504,7 +504,7 @@ public class PageController {
             }
 
         } catch (Exception e) {
-            return "todos";
+            return "redirect:/todo";
         }
     }
 
@@ -801,7 +801,7 @@ public class PageController {
         }
         catch( Exception e){
             model.addAttribute("signinError", "Unauthorized");
-            return "redirect:/signin";
+            return "redirect:/todos";
         }
     }
 
@@ -855,7 +855,7 @@ public class PageController {
             }
         }
         catch( Exception e){
-            return "redirect:/todos";
+            return "redirect:/deleteAccount";
         }
     }
 
@@ -918,7 +918,7 @@ public class PageController {
         }
         catch( Exception e){
             model.addAttribute("signinError", "Unauthorized");
-            return "redirect:/signin";
+            return "redirect:/todos";
         }
     }
 
@@ -1003,7 +1003,7 @@ public String getPassedDueDate(
 
         System.out.println(e.getMessage());
 
-        return "passedDueDate";
+        return "redirect:/todos";
     }
 }
 
@@ -1062,7 +1062,7 @@ public String getPassedDueDate(
                 Integer.class
         );
         int value = response.getBody() == null ?0 :response.getBody();
-        return 2;
+        return value;
     }
 
 //    public int getNoOfNotification(String usertoken, HttpSession session) {
