@@ -302,6 +302,7 @@ public class PageController {
 
                     model.addAttribute("tasks", (response.getBody()));
                     model.addAttribute("currentPage","hometab");
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
 
                     return "todos";
                 } else {
@@ -424,7 +425,7 @@ public class PageController {
 
                     Task task = response.getBody();
                     model.addAttribute("tasks", task);
-
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
                     return "viewSingleTask";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -452,6 +453,7 @@ public class PageController {
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
                     model.addAttribute("todaysDate",LocalDate.now());
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
                     return "todo";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -529,6 +531,7 @@ public class PageController {
                             Task.class,
                             id);
 
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
                     return "redirect:/todos";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -570,6 +573,7 @@ public class PageController {
                     List<Task> completedTaskss = Arrays.asList(response.getBody());
                     model.addAttribute("tasks", completedTaskss);
                     model.addAttribute("currentPage","completedtaskstab");
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
                     return "CompletedTasks";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -608,6 +612,7 @@ public class PageController {
                             entity,
                             Task.class,
                             id);
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
                     return "redirect:/todos";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -670,6 +675,7 @@ public class PageController {
             if (session.getAttribute("token") != null) {
                 String token = session.getAttribute("token").toString();
                 if (token.length() > 30) {
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
                     return "changepassword";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -758,6 +764,7 @@ public class PageController {
 
                     model.addAttribute("profileInfo", response.getBody());
                     model.addAttribute("currentPage","profiletab");
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
                     return "profile";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -780,6 +787,7 @@ public class PageController {
                 String token = (String) session.getAttribute("token");
 
                 if (token.length() > 30) {
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
                     return "deleteAccount";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -895,6 +903,8 @@ public class PageController {
                     List<Task> usersTask = Arrays.asList(response.getBody());
                     model.addAttribute("tasks", usersTask);
                     model.addAttribute("currentPage","calendartab");
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
+
                     return "calendar";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -985,7 +995,7 @@ public String getPassedDueDate(
                 : new ArrayList<>();
 
         model.addAttribute("tasks", tasks);
-
+        model.addAttribute("noOfNotifications", String.valueOf(getNoOfNotification(token, session)));
         return "passedDueDate";
 
     } catch (Exception e) {
@@ -1022,11 +1032,10 @@ public String getPassedDueDate(
             );
 
             int noOfNotifications = response.getBody();
-
-
-
-            model.addAttribute("noOfNotifications", noOfNotifications);
-
+            System.out.println("Value from notification Page: "+getNoOfNotification(token, session));
+            //int noticationValue = getNoOfNotification(token, session);
+            model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
+            //System.out.print("Value from method :"+ noticationValue);
             return "notifications";
 
         } catch (Exception e) {
@@ -1037,4 +1046,22 @@ public String getPassedDueDate(
         }
     }
 
+    public int getNoOfNotification(String usertoken, HttpSession session) {
+        String token = (String) session.getAttribute(usertoken.trim());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                API_URL + "/noOfNotifications",
+                HttpMethod.GET,
+                entity,
+                String.class
+        );
+        String noOfNotifications = response.getBody();
+
+        System.out.println("Notification number: "+noOfNotifications);
+        return Integer.parseInt(noOfNotifications);
+    }
 }

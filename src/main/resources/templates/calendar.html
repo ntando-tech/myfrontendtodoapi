@@ -129,7 +129,7 @@
 
                         <a th:href="@{/calendar}" class="nav-item"  th:classappend="${currentPage == 'calendartab'} ? 'active' : ''">
                             <i class="bi bi-calendar"></i>
-                            <sub class="text-danger" th:text="{noOfNotifications}"></sub>
+                            <sub class="text-danger" th:text="${noOfNotifications}"></sub>
                             <span>Calendar</span>
                         </a>
 

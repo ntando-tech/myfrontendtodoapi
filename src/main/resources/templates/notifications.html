@@ -40,7 +40,7 @@
                     <a th:href="@{/todos}" class="bi bi-arrow-left-circle-fill">Back</a>
                 </div>
                 <div class="d-flex align-items-center justify-content-between mb-2">
-                    <h6 class="mb-0">Completed Tasks</h6>
+                    <h6 class="mb-0">Notifications</h6>
                 </div>
 
                 <div class="d-flex align-items-center border-bottom py-3" th:each="task,hey :${tasks}">
@@ -73,8 +73,8 @@
             </a>
 
             <a th:href="@{/notifications}" class="nav-item"  th:classappend="${currentPage == 'notificationstab'} ? 'active' : ''">
-                <i class="bi bi-bell"></i>
-                <sub class="text-danger" th:text="{noOfNotifications}"></sub>
+                <i class="bi bi-bell"> <b class="bg-danger text-white" th:text="${noOfNotifications} == '0'?'' : ${noOfNotifications}"></b></i>
+<!--                <sub class="text-danger" th:text="${noOfNotifications}"></sub>-->
                 <span>Notifications</span>
             </a>
 
