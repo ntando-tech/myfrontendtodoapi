@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import todo.backend.api.model.Notification;
 import todo.backend.api.model.Task;
 import todo.backend.api.model.Users;
 
@@ -383,6 +384,58 @@ public class PageController {
                     }
                     model.addAttribute("searchword", searchword);
                     model.addAttribute("tasks", searchResults);
+                    return "searchResult";
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
+                    return "signin";
+                }
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
+                return "signin";
+            }
+        } catch (Exception e) {
+            return "redirect:/todos";
+        }
+    }
+
+    @GetMapping("/notification/search")
+    public String searchNotification(@RequestParam(value = "searchword", required = false) String searchword,
+                              HttpSession session,
+                              Model model) {
+
+        try {
+
+            if (session.getAttribute("token") != null) {
+                String token = (String) session.getAttribute("token");
+
+                if (token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.set("Authorization", "Bearer " + token);
+
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+
+                    HttpEntity<Notification> entity = new HttpEntity<>(headers);
+                    ResponseEntity<Notification[]> response = restTemplate.exchange(
+                            API_URL + "/notification",
+                            HttpMethod.GET,
+                            entity,
+                            Notification[].class
+                    );
+                    List<Notification> notifications = Arrays.asList(response.getBody());
+                    List<Notification> searchResults = new ArrayList<>();
+
+                    if (searchword.isEmpty()) {
+                        searchResults = notifications;
+                    } else {
+                        for (Notification notification : notifications) {
+                            if (notification.getTitle().toLowerCase().contains(searchword.toLowerCase()) || notification.getDescription().toLowerCase().contains(searchword.toLowerCase()) ||
+                                   String.valueOf(notification.getCreated()).contains(searchword)) {
+                                searchResults.add(notification);
+                            }
+                        }
+                    }
+                    model.addAttribute("searchword", searchword);
+                    model.addAttribute("notification", searchResults);
                     return "searchResult";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -1008,7 +1061,7 @@ public String getPassedDueDate(
 }
 
     @GetMapping("/notifications")
-    public String getNoOfNotifications(
+    public String getNotifications(
             HttpSession session,
             Model model) {
 
@@ -1020,19 +1073,25 @@ public String getPassedDueDate(
                 return "redirect:/signin";
             }
 
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.set("Authorization", "Bearer " + token);
-//
-//            HttpEntity<String> entity = new HttpEntity<>(headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + token);
 
-//            ResponseEntity<Integer> response = restTemplate.exchange(
-//                    API_URL + "/noOfNotifications",
-//                    HttpMethod.GET,
-//                    entity,
-//                    Integer.class
-//            );
+            HttpEntity<String> entity = new HttpEntity<>(headers);
 
-//            int noOfNotifications = response.getBody();
+            ResponseEntity<Notification[]> response = restTemplate.exchange(
+                    NOTIFICATION_API_URL + "/notification",
+                    HttpMethod.GET,
+                    entity,
+                    Notification[].class
+            );
+
+            assert response.getBody() != null;
+            List<Notification> notification= Arrays.asList(response.getBody());
+            model.addAttribute("notification",notification);
+System.out.println("Notification Size if it empty: "+ notification);
+List<Notification> emptyArray = new ArrayList<>();
+model.addAttribute("emptyArray", emptyArray);
+            System.out.println("EmptyArray: "+ notification);
 
             model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
             model.addAttribute("currentPage","notificationstab");

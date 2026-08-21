@@ -42,23 +42,46 @@
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <h6 class="mb-0">Notifications</h6>
                 </div>
+                <div class="d-flex mb-2 mt-3">
 
-                <div class="d-flex align-items-center border-bottom py-3" th:each="task,hey :${tasks}">
-                    <a class="d-flex" th:if="${task.completed}">
-                        <a class="w-100 ms-3 ml-5" th:href="@{/todo/{id}(id=${task.id})}">
+                    <input class="form-control bg-transparent"
+                           type="text"
+                           id="searchNotification"
+                           placeholder="Type to search"
+                           onkeyup="searchNotification()">
+
+                    <a th:href="@{/todo}" class="btn btn-primary ms-2">Add</a>
+                </div>
+                <div id="taskContainer">
+                <div class="d-flex align-items-center border-bottom py-3" th:each="noti,hey :${notification}">
+                    <a class="d-flex" >
+                        <a class="w-100 ms-3 ml-5" th:href="@{/{id}(id=${noti.id})}">
                             <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-0 " th:classappend="${task.completed} ? 'completed': 'notcompleted' " th:text="${task.title}"></h6>
-                                <small th:text="${task.created}"></small>
-
+                                <h6 class="mb-0 " th:text="${noti.title}"></h6>
+                                <small th:text="${noti.created}"></small>
                             </div>
                             <div class="d-flex w-100 justify-content-between">
-                                <span th:classappend="${task.completed} ? 'completed': 'notcompleted' " th:text="${task.description != null ? #strings.abbreviate(task.description, 50) : ''}"></span>
-                                <small  th:classappend="${task.priority}== 'HIGH' ? 'text-danger' : 'text-success' " th:text="${task.priority}"></small>
+                                <span  th:text="${noti.description != null ? #strings.abbreviate(noti.description, 50) : ''}"></span>
                             </div>
                         </a>
                     </a>
                 </div>
 
+                <div class="d-flex align-items-center py-3" th:if="${notification} == ${emptyArray} ">
+                    <div class="d-flex justify-content-center mt-5" >
+                        <div class="w-100 ms-3 ml-5" >
+                            <div class="d-flex w-100 justify-content-center mt-5">
+<!--                                <h6 class="mb-0 " th:text="${noti.title}"></h6>-->
+<!--                                <small th:text="${noti.created}"></small>-->
+                            </div>
+                            <div class="d-flex w-100 justify-content-center mt-5">
+                                <h4 class="align-items-center">There are no notification</h4>
+<!--                                <span  th:text="${noti.description != null ? #strings.abbreviate(noti.description, 50) : ''}"></span>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
         <nav class="bottom-nav">

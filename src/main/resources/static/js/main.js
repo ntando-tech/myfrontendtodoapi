@@ -91,6 +91,15 @@ document.getElementById("taskContainer").innerHTML = data;
 });
 }
 
+function searchNotification(){
+let keyword = document.getElementById("searchNotification").value.trim();
+fetch("notification/search?searchword="+encodeURIComponent(keyword))
+.then(res => res.text())
+.then(data => {
+document.getElementById("taskContainer").innerHTML =data;
+});
+}
+
 function delete_task_button_yes(){
     document.getElementById("deleteTask").click();
     }
