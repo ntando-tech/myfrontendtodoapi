@@ -263,6 +263,11 @@ public class PageController {
         return "404";
     }
 
+    @GetMapping("/500")
+    public String showInternalErrorPage(){
+        return "500";
+    }
+
     @GetMapping("/todos")
     public String getTasks(
             HttpSession session,
@@ -436,7 +441,7 @@ public class PageController {
                     }
                     model.addAttribute("searchword", searchword);
                     model.addAttribute("notification", searchResults);
-                    return "searchResult";
+                    return "notificationSearchResult";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
                     return "signin";
@@ -492,6 +497,50 @@ public class PageController {
 
         } catch (Exception e) {
             return "viewSingleTask";
+        }
+    }
+
+    @GetMapping("/noti/{id}")
+    public String viewSingleNotification(
+            @PathVariable Long id,
+            Model model,
+            HttpSession session
+    ) {
+
+        try {
+
+            if (session.getAttribute("token") != null) {
+
+                String token = (String) session.getAttribute("token");
+                if (token.length() > 30) {
+                    HttpHeaders headers = new HttpHeaders();
+
+                    headers.set("Authorization", "Bearer " + token);
+
+                    HttpEntity<String> entity = new HttpEntity<>(headers);
+                    ResponseEntity<Notification> response = restTemplate.exchange(
+                            API_URL + "/noti/{id}",
+                            HttpMethod.GET,
+                            entity,
+                            Notification.class,
+                            id
+                    );
+
+                    Notification notification = response.getBody();
+                    model.addAttribute("notification", notification);
+                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
+                    return "notification";
+                } else {
+                    model.addAttribute("signinError", "Unauthorized");
+                    return "signin";
+                }
+            } else {
+                model.addAttribute("signinError", "Unauthorized");
+                return "signin";
+            }
+
+        } catch (Exception e) {
+            return "notification";
         }
     }
 
@@ -586,6 +635,7 @@ public class PageController {
                             id);
 
                     model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
+
                     return "redirect:/todos";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -596,6 +646,8 @@ public class PageController {
                 return "signin";
             }
         } catch (Exception e) {
+            System.out.println("The application crashed");
+            System.out.println(e.getMessage());
             return "redirect:/todos";
         }
     }
@@ -1121,6 +1173,7 @@ model.addAttribute("emptyArray", emptyArray);
                 Integer.class
         );
         int value = response.getBody() == null ?0 :response.getBody();
+        System.out.println(" No of notifications" + value);
         return value;
     }
 
@@ -1140,4 +1193,25 @@ model.addAttribute("emptyArray", emptyArray);
 //        int value = response.getBody() == null ?0 :response.getBody();
 //        return value;
 //    }
+
+//public String sendNotification(String usertoken, HttpSession session) {
+//    String token = (String) session.getAttribute(usertoken.trim());
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.set("Authorization", "Bearer " + usertoken);
+//
+//    HttpEntity<String> entity = new HttpEntity<>(headers);
+//
+//    System.out.println("About to send new notifications");
+//    System.out.println("Usertoken:"+usertoken);
+//    ResponseEntity<String> response = restTemplate.exchange(
+//            NOTIFICATION_API_URL + "/save",
+//            HttpMethod.POST,
+//            entity,
+//            String.class
+//    );
+//    String value = response.getBody() == null ?"0" :response.getBody();
+//    System.out.println(" No of notifications" + value);
+//    return value;
+//}
 }
+
