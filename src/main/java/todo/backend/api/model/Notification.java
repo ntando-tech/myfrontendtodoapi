@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Setter
 @Getter
+@Setter
 public class Notification {
 
     @Id
@@ -23,20 +23,21 @@ public class Notification {
 
     private String description;
 
-    private LocalDate created;
+    private LocalDate created = LocalDate.now();
 
     private int noOfNotifications;
-
-    public Notification(){};
-    public Notification(String title, String description){
-        this.title = title;
-        this.description = description;
-        this.created = LocalDate.now();
-        this.noOfNotifications = 0;
-    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users user;
 
+    public Notification() {
+    }
+
+    public Notification(String title, String description) {
+        this.title = title;
+        this.description = description;
+        this.created = LocalDate.now();
+        this.noOfNotifications = 0;
+    }
 }
