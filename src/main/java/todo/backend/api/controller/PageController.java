@@ -43,6 +43,12 @@ public class PageController {
     public String signup(@ModelAttribute Users users, Model model) {
         try {
             System.out.println("Before sending data to backend");
+            Notification notification = new Notification("New Account", "Welcome to Task Tracker");
+//
+//            System.out.println("Here's my title: "+notification.getTitle());
+//            System.out.println("Here's my description: "+ notification.getDescription());
+//            System.out.println("Ended to store notification");
+
             String message = String.valueOf(restTemplate.postForObject(NORMAL_API_URL+"/register", users, String.class));
             System.out.println("Starting if statements");
             if (message.equals("Username Already Exists")) {
@@ -52,7 +58,7 @@ public class PageController {
                 model.addAttribute("showPasswordMessage", "Email already exists");
                 return "signup";
             } else if (message.equals("User was added successfully")) {
-
+                restTemplate.postForEntity(NOTIFICATION_API_URL+"/testcreatenotification", notification, Void.class);
                 return "redirect:/signin";
             } else {
                 System.out.println("This is else statement");
@@ -77,12 +83,12 @@ public class PageController {
         try {
             model.addAttribute("forgotPasswordMessage", "");
 //            System.out.println("Starting to store notification");
-//            Notification notification = new Notification("Forgot password", "Link to reset password was sent");
-//
-//            System.out.println("Here's my title: "+notification.getTitle());
-//            System.out.println("Here's my description: "+ notification.getDescription());
-//            System.out.println("Ended to store notification");
-//            restTemplate.postForEntity(NOTIFICATION_API_URL+"/testcreatenotification", notification, Void.class);
+            Notification notification = new Notification("Forgot password", "Link to reset password was sent");
+
+            System.out.println("Here's my title: "+notification.getTitle());
+            System.out.println("Here's my description: "+ notification.getDescription());
+            System.out.println("Ended to store notification");
+            restTemplate.postForEntity(NOTIFICATION_API_URL+"/testcreatenotification", notification, Void.class);
             String message = String.valueOf(restTemplate.postForObject(NORMAL_API_URL+"/forgotpassword", users, String.class));
             System.out.println("Message:" + message);
 
