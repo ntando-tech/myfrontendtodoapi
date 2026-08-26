@@ -43,7 +43,7 @@ public class PageController {
     public String signup(@ModelAttribute Users users, Model model) {
         try {
             System.out.println("Before sending data to backend");
-            Notification notification = new Notification("New Account", "Welcome to Task Tracker");
+         //   Notification notification = new Notification("New Account", "Welcome to Task Tracker");
 //
 //            System.out.println("Here's my title: "+notification.getTitle());
 //            System.out.println("Here's my description: "+ notification.getDescription());
@@ -58,7 +58,7 @@ public class PageController {
                 model.addAttribute("showPasswordMessage", "Email already exists");
                 return "signup";
             } else if (message.equals("User was added successfully")) {
-                restTemplate.postForEntity(NOTIFICATION_API_URL+"/testcreatenotification", notification, Void.class);
+                //restTemplate.postForEntity(NOTIFICATION_API_URL+"/testcreatenotification", notification, Void.class);
                 return "redirect:/signin";
             } else {
                 System.out.println("This is else statement");
