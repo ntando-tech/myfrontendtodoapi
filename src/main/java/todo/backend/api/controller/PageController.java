@@ -43,11 +43,11 @@ public class PageController {
     public String signup(@ModelAttribute Users users, Model model) {
         try {
             System.out.println("Before sending data to backend");
-         //   Notification notification = new Notification("New Account", "Welcome to Task Tracker");
-//
-//            System.out.println("Here's my title: "+notification.getTitle());
-//            System.out.println("Here's my description: "+ notification.getDescription());
-//            System.out.println("Ended to store notification");
+            Notification notification = new Notification("New Account", "Welcome to Task Tracker");
+
+            System.out.println("Here's my title: "+notification.getTitle());
+            System.out.println("Here's my description: "+ notification.getDescription());
+            System.out.println("Ended to store notification");
 
             String message = String.valueOf(restTemplate.postForObject(NORMAL_API_URL+"/register", users, String.class));
             System.out.println("Starting if statements");
@@ -58,7 +58,7 @@ public class PageController {
                 model.addAttribute("showPasswordMessage", "Email already exists");
                 return "signup";
             } else if (message.equals("User was added successfully")) {
-                //restTemplate.postForEntity(NOTIFICATION_API_URL+"/testcreatenotification", notification, Void.class);
+                restTemplate.postForEntity(NOTIFICATION_API_URL+"/testcreatenotification", notification, Void.class);
                 return "redirect:/signin";
             } else {
                 System.out.println("This is else statement");
@@ -138,7 +138,10 @@ public class PageController {
             System.out.println("Reset token on the path " + resetPasswordToken);
             String message = String.valueOf(restTemplate.postForObject(NORMAL_API_URL+"/resetpassword?resetPasswordToken=" + resetPasswordToken, users, String.class));
 
+            Notification notification = new Notification("User clicked Reset Password","Your password has been successfully reset. You can now log in using your new password.");
+
             if (message.equals("Password was resetted")) {
+                restTemplate.postForEntity(NOTIFICATION_API_URL+"/createnotification", notification, Void.class);
                 model.addAttribute("resetPasswordMessage", "");
                 return "redirect:/signin";
             } else if (message.equals("Use legitimate link to reset the password")) {
@@ -606,6 +609,25 @@ public class PageController {
                             entity,
                             Task.class
                     );
+System.out.println("Task priority: "+ task.getPriority());
+                    if(task.getPriority() != null && task.getPriority().equals("HIGH")) {
+
+                        Notification notification = new Notification("New Priority Task Created", "You have successfully created a new priority task. Remember to complete it before its due date.");
+                        System.out.println("Task title: "+ notification.getTitle());
+                        System.out.println("Task description: "+ notification.getDescription());
+                                HttpHeaders headers1 = new HttpHeaders();
+                        headers.set("Authorization", "Bearer " + token);
+
+                        headers.setContentType(MediaType.APPLICATION_JSON);
+                        HttpEntity<Notification> entity1 = new HttpEntity<>(notification, headers1);
+                        restTemplate.exchange(
+                                NOTIFICATION_API_URL + "/createnotification",
+                                HttpMethod.POST,
+                                entity1,
+                                Notification.class
+                        );
+                        restTemplate.postForEntity(NOTIFICATION_API_URL + "/createnotification", notification, Notification.class);
+                    }
 
                     return "redirect:/todos";
                 } else {
@@ -836,6 +858,16 @@ public class PageController {
 
 
                     if (response.getBody() != null && response.getBody().equals("Password Changed")) {
+
+                            Notification notification = new Notification("Password Changed Successfully", "Your password has been successfully changed. If you did not make this change, please secure your account immediately.");
+                            HttpEntity<Notification> entity1 = new HttpEntity<>(notification, headers);
+                            restTemplate.exchange(
+                                    NOTIFICATION_API_URL + "/createnotification",
+                                    HttpMethod.POST,
+                                    entity1,
+                                    Notification.class
+                            );
+
                         model.addAttribute("changePasswordError", "Password was successfully changed");
                         return "changepassword";
                     } else if (response.getBody() != null && response.getBody().equals("You entered wrong current password")) {
