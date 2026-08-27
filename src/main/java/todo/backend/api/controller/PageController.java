@@ -626,7 +626,7 @@ System.out.println("Task priority: "+ task.getPriority());
                                 entity1,
                                 Notification.class
                         );
-                        restTemplate.postForEntity(NOTIFICATION_API_URL + "/createnotification", notification, Notification.class);
+                        //restTemplate.postForEntity(NOTIFICATION_API_URL + "/createnotification", notification, Notification.class);
                     }
 
                     return "redirect:/todos";
@@ -1164,23 +1164,25 @@ public String getPassedDueDate(
         try {
 
             String token = (String) session.getAttribute("token");
-
+System.out.println("Notification token: "+token);
             if (token == null || token.isEmpty()) {
                 return "redirect:/signin";
             }
-
+System.out.println("Setting headers");
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "Bearer " + token);
-
+            System.out.println("Fetching data");
             HttpEntity<String> entity = new HttpEntity<>(headers);
-
+            RestTemplate restTemplate = new RestTemplate();
+            System.out.println("Entity Header: "+ entity.getHeaders());
+            System.out.println("Entity Body: "+entity.getBody());
             ResponseEntity<Notification[]> response = restTemplate.exchange(
                     NOTIFICATION_API_URL + "/notification",
                     HttpMethod.GET,
                     entity,
                     Notification[].class
             );
-
+System.out.println("Response Message: "+ response.getBody());
             assert response.getBody() != null;
             List<Notification> notification= Arrays.asList(response.getBody());
             model.addAttribute("notification",notification);
