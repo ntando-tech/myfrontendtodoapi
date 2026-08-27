@@ -623,6 +623,15 @@ System.out.println("Task priority: "+ task.getPriority());
                                 HttpHeaders headers1 = new HttpHeaders();
                         headers.set("Authorization", "Bearer " + token);
 
+                        ResponseEntity<Users> profileInfo = restTemplate.exchange(
+                                NORMAL_API_URL+"/profileinfo",
+                                HttpMethod.GET,
+                                entity,
+                                Users.class
+                        );
+                        System.out.println("Username: "+profileInfo.getBody());
+
+                        notification.setUser(profileInfo.getBody());
                         headers.setContentType(MediaType.APPLICATION_JSON);
                         HttpEntity<Notification> entity1 = new HttpEntity<>(notification, headers1);
                         restTemplate.exchange(
