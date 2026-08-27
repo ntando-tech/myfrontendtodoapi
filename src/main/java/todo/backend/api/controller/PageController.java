@@ -1,6 +1,7 @@
 package todo.backend.api.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -144,7 +145,11 @@ public class PageController {
                 restTemplate.postForEntity(NOTIFICATION_API_URL+"/createnotification", notification, Void.class);
                 model.addAttribute("resetPasswordMessage", "");
                 return "redirect:/signin";
-            } else if (message.equals("Use legitimate link to reset the password")) {
+            }else if(message.equals("New password must be different from your current password.")){
+                model.addAttribute("resetPasswordToken",message);
+                    return "resetpassword";
+
+            }else if (message.equals("Use legitimate link to reset the password")) {
                 model.getAttribute("resetPasswordToken");
                 model.addAttribute("resetPasswordToken", resetPasswordToken);
                 model.addAttribute("resetPasswordMessage", message);
@@ -870,6 +875,9 @@ System.out.println("Task priority: "+ task.getPriority());
 
                         model.addAttribute("changePasswordError", "Password was successfully changed");
                         return "changepassword";
+                    }else if(response.getBody() != null && response.getBody().equals("New password must be different from your current password.")){
+                        model.addAttribute("changePasswordError",response.getBody());
+                        return "changePassword";
                     } else if (response.getBody() != null && response.getBody().equals("You entered wrong current password")) {
                         model.addAttribute("changePasswordError", response.getBody());
                         return "changepassword";
@@ -1259,5 +1267,7 @@ model.addAttribute("emptyArray", emptyArray);
 //    System.out.println(" No of notifications" + value);
 //    return value;
 //}
+
+
 }
 
