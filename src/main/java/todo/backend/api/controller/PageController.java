@@ -1164,53 +1164,6 @@ public String getPassedDueDate(
     }
 }
 
-//    @GetMapping("/notifications")
-//    public String getNotifications(
-//            HttpSession session,
-//            Model model) {
-//
-//        try {
-//
-//            String token = (String) session.getAttribute("token");
-//System.out.println("Notification token: "+token);
-//            if (token == null || token.isEmpty()) {
-//                return "redirect:/signin";
-//            }
-//System.out.println("Setting headers");
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.set("Authorization", "Bearer " + token);
-//            System.out.println("Fetching data");
-//            HttpEntity<String> entity = new HttpEntity<>(headers);
-//            RestTemplate restTemplate = new RestTemplate();
-//            System.out.println("Entity Header: "+ entity.getHeaders());
-//            System.out.println("Entity Body: "+entity.getBody());
-//            ResponseEntity<Notification[]> response = restTemplate.exchange(
-//                    NOTIFICATION_API_URL + "/notification",
-//                    HttpMethod.GET,
-//                    entity,
-//                    Notification[].class
-//            );
-//System.out.println("Response Message: "+ response.getBody());
-//            assert response.getBody() != null;
-//            List<Notification> notification= Arrays.asList(response.getBody());
-//            model.addAttribute("notification",notification);
-//System.out.println("Notification Size if it empty: "+ notification);
-//List<Notification> emptyArray = new ArrayList<>();
-//model.addAttribute("emptyArray", emptyArray);
-//            System.out.println("EmptyArray: "+ notification);
-//
-//            model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
-//            model.addAttribute("currentPage","notificationstab");
-//            return "notifications";
-//
-//        } catch (Exception e) {
-//
-//            System.out.println(e.getMessage());
-//            model.addAttribute("noOfNotifications", 0);
-//            return "notifications";
-//        }
-//    }
-
     @GetMapping("/notifications")
     public String getNotifications(
             HttpSession session,
@@ -1219,68 +1172,116 @@ public String getPassedDueDate(
         try {
 
             String token = (String) session.getAttribute("token");
-
-            System.out.println("Notification token: " + token);
-
+System.out.println("Notification token: "+token);
             if (token == null || token.isEmpty()) {
                 return "redirect:/signin";
             }
-
+System.out.println("Setting headers");
             HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(token);
+            headers.set("Authorization", "Bearer " + token);
+            System.out.println("Fetching data");
 
-            HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-            System.out.println("Entity Headers: " + entity.getHeaders());
-            System.out.println("Fetching notifications...");
-
-            RestTemplate restTemplate = new RestTemplate();
-
-            ResponseEntity<Notification[]> response =
-                    restTemplate.exchange(
-                            NOTIFICATION_API_URL + "/notification",
-                            HttpMethod.GET,
-                            entity,
-                            Notification[].class
-                    );
-
-            Notification[] notificationArray = response.getBody();
-
-            List<Notification> notification =
-                    notificationArray != null
-                            ? Arrays.asList(notificationArray)
-                            : new ArrayList<>();
-
-            System.out.println(
-                    "Notification count: " + notification.size()
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            //RestTemplate restTemplate = new RestTemplate();
+            System.out.println("Entity Header: "+ entity.getHeaders());
+            System.out.println("Entity Body: "+entity.getBody());
+            ResponseEntity<Notification[]> response = restTemplate.exchange(
+                    NOTIFICATION_API_URL + "/notification",
+                    HttpMethod.GET,
+                    entity,
+                    Notification[].class
             );
+System.out.println("Response Message: "+ response.getBody());
+            assert response.getBody() != null;
+            List<Notification> notification= Arrays.asList(response.getBody());
+            model.addAttribute("notification",notification);
+System.out.println("Notification Size if it empty: "+ notification);
+List<Notification> emptyArray = new ArrayList<>();
+model.addAttribute("emptyArray", emptyArray);
+            System.out.println("EmptyArray: "+ notification);
 
-            model.addAttribute("notification", notification);
-
-            model.addAttribute(
-                    "noOfNotifications",
-                    getNoOfNotification(token, session)
-            );
-
-            model.addAttribute("currentPage", "notificationstab");
-
+            model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
+            model.addAttribute("currentPage","notificationstab");
             return "notifications";
 
         } catch (Exception e) {
 
-            e.printStackTrace();
-
-            model.addAttribute(
-                    "notification",
-                    new ArrayList<Notification>()
-            );
-            System.out.println("The code crashed");
+            System.out.println(e.getMessage());
             model.addAttribute("noOfNotifications", 0);
-            model.addAttribute("currentPage", "notificationstab");
-
             return "notifications";
         }
     }
+
+//    @GetMapping("/notifications")
+//    public String getNotifications(
+//            HttpSession session,
+//            Model model) {
+//
+//        try {
+//
+//            String token = (String) session.getAttribute("token");
+//
+//            System.out.println("Notification token: " + token);
+//
+//            if (token == null || token.isEmpty()) {
+//                return "redirect:/signin";
+//            }
+//
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.set("Authorization", "Bearer " + token);
+//
+//            HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//            System.out.println("Entity Headers: " + entity.getHeaders());
+//            System.out.println("Fetching notifications...");
+//
+//            RestTemplate restTemplate = new RestTemplate();
+//
+//            ResponseEntity<Notification[]> response =
+//                    restTemplate.exchange(
+//                            NOTIFICATION_API_URL + "/notification",
+//                            HttpMethod.GET,
+//                            entity,
+//                            Notification[].class
+//                    );
+//
+//            Notification[] notificationArray = response.getBody();
+//
+//            List<Notification> notification =
+//                    notificationArray != null
+//                            ? Arrays.asList(notificationArray)
+//                            : new ArrayList<>();
+//
+//            System.out.println(
+//                    "Notification count: " + notification.size()
+//            );
+//
+//            model.addAttribute("notification", notification);
+//
+//            model.addAttribute(
+//                    "noOfNotifications",
+//                    getNoOfNotification(token, session)
+//            );
+//
+//            model.addAttribute("currentPage", "notificationstab");
+//
+//            return "notifications";
+//
+//        } catch (Exception e) {
+//
+//            e.printStackTrace();
+//
+//            model.addAttribute(
+//                    "notification",
+//                    new ArrayList<Notification>()
+//            );
+//            System.out.println("The code crashed");
+//            model.addAttribute("noOfNotifications", 0);
+//            model.addAttribute("currentPage", "notificationstab");
+//
+//            return "notifications";
+//        }
+//    }
 
     public int getNoOfNotification(String usertoken, HttpSession session) {
         String token = (String) session.getAttribute(usertoken.trim());
