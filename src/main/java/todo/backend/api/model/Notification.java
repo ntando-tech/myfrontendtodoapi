@@ -27,9 +27,6 @@ public class Notification {
 
     private int noOfNotifications;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private Users user;
 
     public Notification() {
     }
@@ -40,4 +37,9 @@ public class Notification {
         this.created = LocalDate.now();
         this.noOfNotifications = 0;
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private Users user;
 }
