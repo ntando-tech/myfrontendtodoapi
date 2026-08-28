@@ -316,6 +316,8 @@ public class PageController {
                             Task[].class
                     );
                     System.out.println("After Todos: "+response.getBody());
+
+                    System.out.println("Task token: "+ token);
 //                    ResponseEntity<Users> profileInfo = restTemplate.exchange(
 //                            NORMAL_API_URL+"/profileinfo",
 //                            HttpMethod.GET,
@@ -323,6 +325,7 @@ public class PageController {
 //                            Users.class
 //                    );
 //                    System.out.println("Username: "+profileInfo.getBody());
+                    System.out.println(getCurrentUser(session,token));
 //
 //
 //                    model.addAttribute("profileInfo", profileInfo.getBody());
@@ -614,33 +617,33 @@ public class PageController {
                             Task.class
                     );
 System.out.println("Task priority: "+ task.getPriority());
-                    if(task.getPriority() != null && task.getPriority().equals("HIGH")) {
-
-                        Notification notification = new Notification("New Priority Task Created", "You have successfully created a new priority task. Remember to complete it before its due date.");
-                        System.out.println("Task title: "+ notification.getTitle());
-                        System.out.println("Task description: "+ notification.getDescription());
-                                HttpHeaders headers1 = new HttpHeaders();
-                        headers.set("Authorization", "Bearer " + token);
-
-                        ResponseEntity<Users> profileInfo = restTemplate.exchange(
-                                NORMAL_API_URL+"/profileinfo",
-                                HttpMethod.GET,
-                                entity,
-                                Users.class
-                        );
-                        System.out.println("Username: "+profileInfo.getBody());
-
-                        notification.setUser(profileInfo.getBody());
-                        headers.setContentType(MediaType.APPLICATION_JSON);
-                        HttpEntity<Notification> entity1 = new HttpEntity<>(notification, headers1);
-                        restTemplate.exchange(
-                                NOTIFICATION_API_URL + "/createnotification",
-                                HttpMethod.POST,
-                                entity1,
-                                Notification.class
-                        );
-                        //restTemplate.postForEntity(NOTIFICATION_API_URL + "/createnotification", notification, Notification.class);
-                    }
+//                    if(task.getPriority() != null && task.getPriority().equals("HIGH")) {
+//
+//                        Notification notification = new Notification("New Priority Task Created", "You have successfully created a new priority task. Remember to complete it before its due date.");
+//                        System.out.println("Task title: "+ notification.getTitle());
+//                        System.out.println("Task description: "+ notification.getDescription());
+//                                HttpHeaders headers1 = new HttpHeaders();
+//                        headers.set("Authorization", "Bearer " + token);
+//
+//                        ResponseEntity<Users> profileInfo = restTemplate.exchange(
+//                                NORMAL_API_URL+"/profileinfo",
+//                                HttpMethod.GET,
+//                                entity,
+//                                Users.class
+//                        );
+//                        System.out.println("Username: "+profileInfo.getBody());
+//
+//                        notification.setUser(profileInfo.getBody());
+//                        headers.setContentType(MediaType.APPLICATION_JSON);
+//                        HttpEntity<Notification> entity1 = new HttpEntity<>(notification, headers1);
+//                        restTemplate.exchange(
+//                                NOTIFICATION_API_URL + "/createnotification",
+//                                HttpMethod.POST,
+//                                entity1,
+//                                Notification.class
+//                        );
+//                        //restTemplate.postForEntity(NOTIFICATION_API_URL + "/createnotification", notification, Notification.class);
+//                    }
 
                     return "redirect:/todos";
                 } else {
@@ -872,24 +875,24 @@ System.out.println("Task priority: "+ task.getPriority());
 
                     if (response.getBody() != null && response.getBody().equals("Password Changed")) {
 
-                        ResponseEntity<Users> profileInfo = restTemplate.exchange(
-                                NORMAL_API_URL+"/profileinfo",
-                                HttpMethod.GET,
-                                entity,
-                                Users.class
-                        );
-                        System.out.println("Username: "+profileInfo.getBody());
-
-
-                            Notification notification = new Notification("Password Changed Successfully", "Your password has been successfully changed. If you did not make this change, please secure your account immediately.");
-                            notification.setUser(profileInfo.getBody());
-                            HttpEntity<Notification> entity1 = new HttpEntity<>(notification, headers);
-                            restTemplate.exchange(
-                                    NOTIFICATION_API_URL + "/createnotification",
-                                    HttpMethod.POST,
-                                    entity1,
-                                    Notification.class
-                            );
+//                        ResponseEntity<Users> profileInfo = restTemplate.exchange(
+//                                NORMAL_API_URL+"/profileinfo",
+//                                HttpMethod.GET,
+//                                entity,
+//                                Users.class
+//                        );
+//                        System.out.println("Username: "+profileInfo.getBody());
+//
+//
+//                            Notification notification = new Notification("Password Changed Successfully", "Your password has been successfully changed. If you did not make this change, please secure your account immediately.");
+//                            notification.setUser(profileInfo.getBody());
+//                            HttpEntity<Notification> entity1 = new HttpEntity<>(notification, headers);
+//                            restTemplate.exchange(
+//                                    NOTIFICATION_API_URL + "/createnotification",
+//                                    HttpMethod.POST,
+//                                    entity1,
+//                                    Notification.class
+//                            );
 
                         model.addAttribute("changePasswordError", "Password was successfully changed");
                         return "changepassword";
@@ -1358,6 +1361,48 @@ model.addAttribute("emptyArray", emptyArray);
 //    return value;
 //}
 
+public String getCurrentUser(HttpSession profileSession, String token){
+    try{
+    if (profileSession.getAttribute("token") != null) {
 
+        if (token.length() > 30) {
+            System.out.println("Starting the profile statement");
+            System.out.println("Profile Token: "+ token);
+            System.out.println("Profile token: "+profileSession.getAttribute("token"));
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + token);
+
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+
+
+            ResponseEntity<Users> profileInfo = restTemplate.exchange(
+                    NORMAL_API_URL+"/profileinfo",
+                    HttpMethod.GET,
+                    entity,
+                    Users.class
+            );
+            System.out.println("Profile: "+profileInfo.getBody());
+//
+//
+//                    model.addAttribute("profileInfo", profileInfo.getBody());
+
+            return "todos";
+        } else {
+
+            return "redirect:/signin";
+        }
+    } else {
+        //model.addAttribute("signinError", "Unauthorized");
+        return "redirect:/signin";
+    }
+} catch (Exception e) {
+        System.out.println(e.getMessage());
+        return "todos";
+    }
 }
+}
+
 
