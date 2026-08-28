@@ -930,7 +930,7 @@ System.out.println("Task priority: "+ task.getPriority());
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
 
-                    headers.setContentType(MediaType.APPLICATION_JSON);
+//                    headers.setContentType(MediaType.APPLICATION_JSON);
 
                     HttpEntity<Users> entity = new HttpEntity<>(headers);
                     ResponseEntity<Users> response = restTemplate.exchange(
