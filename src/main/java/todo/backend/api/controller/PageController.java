@@ -318,17 +318,17 @@ public class PageController {
                     System.out.println("After Todos: "+response.getBody());
 
                     System.out.println("Task token: "+ token);
-//                    ResponseEntity<Users> profileInfo = restTemplate.exchange(
-//                            NORMAL_API_URL+"/profileinfo",
-//                            HttpMethod.GET,
-//                            entity,
-//                            Users.class
-//                    );
-//                    System.out.println("Username: "+profileInfo.getBody());
+                    ResponseEntity<Users> profileInfo = restTemplate.exchange(
+                            NORMAL_API_URL+"/profileinfo",
+                            HttpMethod.GET,
+                            entity,
+                            Users.class
+                    );
+                    System.out.println("Username: "+profileInfo.getBody());
                     System.out.println(getCurrentUser(session,token));
 //
 //
-//                    model.addAttribute("profileInfo", profileInfo.getBody());
+                    model.addAttribute("profileInfo", profileInfo.getBody());
 
                     model.addAttribute("tasks", (response.getBody()));
                     model.addAttribute("currentPage","hometab");
@@ -933,7 +933,14 @@ System.out.println("Task priority: "+ task.getPriority());
 //                    headers.setContentType(MediaType.APPLICATION_JSON);
 
                     //HttpEntity<Users> entity = new HttpEntity<>(headers);
+
+                    System.out.println("IF STATEMENT");
+                    System.out.println("TOKEN = [" + token + "]");
+                    System.out.println("TOKEN LENGTH = " + token.length());
+
+
                     HttpEntity<Void> entity = new HttpEntity<>(headers);
+                    System.out.println("HEADERS = " + entity.getHeaders());
                     ResponseEntity<Users> response = restTemplate.exchange(
                             NORMAL_API_URL+"/profileinfo",
                             HttpMethod.GET,
