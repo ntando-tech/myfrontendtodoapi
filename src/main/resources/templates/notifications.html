@@ -44,6 +44,12 @@
                 </div>
                 <div class="d-flex mb-2 mt-3">
 
+<!--                    <input class="form-control bg-transparent"-->
+<!--                           type="text"-->
+<!--                           id="searchNotification"-->
+<!--                           placeholder="Type to search"-->
+<!--                           onkeyup="searchNotification()">-->
+
                     <input class="form-control bg-transparent"
                            type="text"
                            id="searchNotification"
@@ -52,7 +58,7 @@
 
                     <a th:href="@{/todo}" class="btn btn-primary ms-2">Add</a>
                 </div>
-                <div id="taskContainer">
+                <div id="notificationContainer">
                 <div class="d-flex align-items-center border-bottom py-3" th:each="noti,hey :${notification}">
                     <a class="d-flex" >
                         <a class="w-100 ms-3 ml-5" th:href="@{/noti/{id}(id=${noti.id})}">

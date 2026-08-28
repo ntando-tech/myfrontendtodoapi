@@ -57,6 +57,6 @@ public class Users {
     private List<Task> tasks;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
+//    @JsonIgnore
     private List<Notification> notification;
 }

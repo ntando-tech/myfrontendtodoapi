@@ -32,7 +32,7 @@
 <body>
 <div class="d-flex align-items-center border-bottom py-3" th:each="noti,hey :${notification}">
     <a class="d-flex" >
-        <a class="w-100 ms-3 ml-5" th:href="@{/{id}(id=${noti.id})}">
+        <a class="w-100 ms-3 ml-5" th:href="@{/noti/{id}(id=${noti.id})}">
             <div class="d-flex w-100 justify-content-between">
                 <h6 class="mb-0 " th:text="${noti.title}"></h6>
                 <small th:text="${noti.created}"></small>

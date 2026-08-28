@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
-    <title>View Task</title>
+    <title>View Notification</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -39,26 +39,26 @@
         <div class="col-sm-12  col-xl-12">
             <div class="bg-light rounded h-100 p-4" >
                 <div class="mb-3">
-                    <a th:href="@{/notification}" class="bi bi-arrow-left-circle-fill">Back</a>
+                    <a th:href="@{/notifications}" class="bi bi-arrow-left-circle-fill">Back</a>
                 </div>
                 <h6 class="mb-4">View Notification</h6>
 
-                    <form autocomplete="off" th:action="@{/todo/{id}(id=${tasks.id})}" th:method="post">
+                    <form autocomplete="off" th:action="@{/noti/{id}(id=${notification.id})}" >
                         <div class="mb-3">
                             <label for="notificationTitle" class="form-label fw-bold">Title</label>
-                            <input th:value="${noti.title}" required name="title"  class="form-control" id="notificationTitle"
+                            <input th:value="${notification.title}" disabled required name="title"  class="form-control" id="notificationTitle"
                                    aria-describedby="notificationTitleHelp"/>
 
                         </div>
                         <div class="mb-3">
                             <label for="notificationDescription" class="form-label fw-bold">Description</label>
-                            <textarea class="form-control"  name="description"  th:text="${noti.description}"
+                            <textarea class="form-control" disabled name="description"  th:text="${notification.description}"
                                       id="notificationDescription" style="height: 150px;"></textarea>
                         </div>
 
                         <div class="mb-3">
                             <label for="notificationCreatedAt" class="form-label fw-bold">Created At</label>
-                            <input class="form-control" name="dueDate" type="date" th:value="${noti.created}"
+                            <input class="form-control" disabled name="dueDate" type="date" th:value="${notification.created}"
                                     id="notificationCreatedAt"/>
                         </div>
 

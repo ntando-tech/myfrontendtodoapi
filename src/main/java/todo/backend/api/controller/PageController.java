@@ -423,7 +423,7 @@ public class PageController {
         }
     }
 
-    @GetMapping("/notification/search")
+    @GetMapping("/notifications/search")
     public String searchNotification(@RequestParam(value = "searchword", required = false) String searchword,
                               HttpSession session,
                               Model model) {
@@ -437,11 +437,9 @@ public class PageController {
                     HttpHeaders headers = new HttpHeaders();
                     headers.set("Authorization", "Bearer " + token);
 
-                    headers.setContentType(MediaType.APPLICATION_JSON);
-
                     HttpEntity<Notification> entity = new HttpEntity<>(headers);
                     ResponseEntity<Notification[]> response = restTemplate.exchange(
-                            API_URL + "/notification",
+                            NOTIFICATION_API_URL + "/notification",
                             HttpMethod.GET,
                             entity,
                             Notification[].class
@@ -461,6 +459,7 @@ public class PageController {
                     }
                     model.addAttribute("searchword", searchword);
                     model.addAttribute("notification", searchResults);
+//                    System.out.println("searchResults: "+ searchResults);
                     return "notificationSearchResult";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -471,7 +470,7 @@ public class PageController {
                 return "signin";
             }
         } catch (Exception e) {
-            return "redirect:/todos";
+            return "redirect:/notifications";
         }
     }
 
@@ -539,7 +538,7 @@ public class PageController {
 
                     HttpEntity<String> entity = new HttpEntity<>(headers);
                     ResponseEntity<Notification> response = restTemplate.exchange(
-                            API_URL + "/noti/{id}",
+                            NOTIFICATION_API_URL + "/noti/{id}",
                             HttpMethod.GET,
                             entity,
                             Notification.class,
@@ -549,7 +548,7 @@ public class PageController {
                     Notification notification = response.getBody();
                     model.addAttribute("notification", notification);
                     model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
-                    return "notification";
+                    return "viewSingleNotification";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
                     return "signin";
@@ -873,7 +872,17 @@ System.out.println("Task priority: "+ task.getPriority());
 
                     if (response.getBody() != null && response.getBody().equals("Password Changed")) {
 
+                        ResponseEntity<Users> profileInfo = restTemplate.exchange(
+                                NORMAL_API_URL+"/profileinfo",
+                                HttpMethod.GET,
+                                entity,
+                                Users.class
+                        );
+                        System.out.println("Username: "+profileInfo.getBody());
+
+
                             Notification notification = new Notification("Password Changed Successfully", "Your password has been successfully changed. If you did not make this change, please secure your account immediately.");
+                            notification.setUser(profileInfo.getBody());
                             HttpEntity<Notification> entity1 = new HttpEntity<>(notification, headers);
                             restTemplate.exchange(
                                     NOTIFICATION_API_URL + "/createnotification",
