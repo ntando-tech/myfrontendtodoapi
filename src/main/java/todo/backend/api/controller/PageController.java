@@ -315,15 +315,28 @@ public class PageController {
                             entity,
                             Task[].class
                     );
-                    System.out.println("After Todos: "+response.getBody());
+//                    System.out.println("After Todos: "+response.getBody());
+//                    ResponseEntity<Users> profileInfo = restTemplate.exchange(
+//                            NORMAL_API_URL+"/profileinfo",
+//                            HttpMethod.GET,
+//                            entity,
+//                            Users.class
+//                    );
+//                    System.out.println("Username: "+profileInfo.getBody());
+                    HttpHeaders headers1 = new HttpHeaders();
+                    headers1.setBearerAuth(token);
+
+                    HttpEntity<Void> entity1 = new HttpEntity<>(headers1);
+
+                    System.out.println("Token: " + token);
+                    System.out.println("Headers: " + entity.getHeaders());
+
                     ResponseEntity<Users> profileInfo = restTemplate.exchange(
-                            NORMAL_API_URL+"/profileinfo",
+                            NORMAL_API_URL + "/profileinfo",
                             HttpMethod.GET,
-                            entity,
+                            entity1,
                             Users.class
                     );
-                    System.out.println("Username: "+profileInfo.getBody());
-
 
                     model.addAttribute("profileInfo", profileInfo.getBody());
 
