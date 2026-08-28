@@ -932,7 +932,8 @@ System.out.println("Task priority: "+ task.getPriority());
 
 //                    headers.setContentType(MediaType.APPLICATION_JSON);
 
-                    HttpEntity<Users> entity = new HttpEntity<>(headers);
+                    //HttpEntity<Users> entity = new HttpEntity<>(headers);
+                    HttpEntity<Void> entity = new HttpEntity<>(headers);
                     ResponseEntity<Users> response = restTemplate.exchange(
                             NORMAL_API_URL+"/profileinfo",
                             HttpMethod.GET,
@@ -943,7 +944,7 @@ System.out.println("Task priority: "+ task.getPriority());
 
                     model.addAttribute("profileInfo", response.getBody());
                     model.addAttribute("currentPage","profiletab");
-                    model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
+                   // model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
                     return "profile";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
@@ -955,6 +956,7 @@ System.out.println("Task priority: "+ task.getPriority());
             }
         }
         catch( Exception e){
+            e.printStackTrace();
         return "redirect:/todos";
     }
 }
