@@ -84,12 +84,12 @@ public class PageController {
         try {
             model.addAttribute("forgotPasswordMessage", "");
 //            System.out.println("Starting to store notification");
-            Notification notification = new Notification("Forgot password", "Link to reset password was sent");
+  //          Notification notification = new Notification("Forgot password", "Link to reset password was sent");
 
-            System.out.println("Here's my title: "+notification.getTitle());
-            System.out.println("Here's my description: "+ notification.getDescription());
-            System.out.println("Ended to store notification");
-            restTemplate.postForEntity(NOTIFICATION_API_URL+"/testcreatenotification", notification, Void.class);
+  //          System.out.println("Here's my title: "+notification.getTitle());
+  //          System.out.println("Here's my description: "+ notification.getDescription());
+  //          System.out.println("Ended to store notification");
+           // restTemplate.postForEntity(NOTIFICATION_API_URL+"/testcreatenotification", notification, Void.class);
             String message = String.valueOf(restTemplate.postForObject(NORMAL_API_URL+"/forgotpassword", users, String.class));
             System.out.println("Message:" + message);
 
