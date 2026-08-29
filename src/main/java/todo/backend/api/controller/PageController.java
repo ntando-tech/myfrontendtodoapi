@@ -45,7 +45,7 @@ public class PageController {
         try {
             System.out.println("Before sending data to backend");
             Notification notification = new Notification("New Account", "Welcome to Task Tracker");
-
+            notification.setUser(users);
             System.out.println("Here's my title: "+notification.getTitle());
             System.out.println("Here's my description: "+ notification.getDescription());
             System.out.println("Ended to store notification");
@@ -139,10 +139,10 @@ public class PageController {
             System.out.println("Reset token on the path " + resetPasswordToken);
             String message = String.valueOf(restTemplate.postForObject(NORMAL_API_URL+"/resetpassword?resetPasswordToken=" + resetPasswordToken, users, String.class));
 
-            Notification notification = new Notification("User clicked Reset Password","Your password has been successfully reset. You can now log in using your new password.");
+          //  Notification notification = new Notification("User clicked Reset Password","Your password has been successfully reset. You can now log in using your new password.");
 
             if (message.equals("Password was resetted")) {
-                restTemplate.postForEntity(NOTIFICATION_API_URL+"/createnotification", notification, Void.class);
+             //   restTemplate.postForEntity(NOTIFICATION_API_URL+"/createnotification", notification, Void.class);
                 model.addAttribute("resetPasswordMessage", "");
                 return "redirect:/signin";
             }else if(message.equals("New password must be different from your current password.")){
