@@ -562,6 +562,7 @@ public class PageController {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             return "notification";
         }
     }
