@@ -551,7 +551,7 @@ public class PageController {
                     Notification notification = response.getBody();
                     model.addAttribute("notification", notification);
                     model.addAttribute("noOfNotifications", getNoOfNotification(token, session));
-                    return "viewSingleNotification";
+                    return "ViewSingleNotification";
                 } else {
                     model.addAttribute("signinError", "Unauthorized");
                     return "signin";
